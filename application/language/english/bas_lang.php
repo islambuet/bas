@@ -87,6 +87,7 @@ $lang['LABEL_YES'] = 'Yes';
 $lang['LABEL_NO'] = 'No';
 
 
+$lang['LABEL_ID'] = 'id';
 $lang['LABEL_YEAR'] = 'Year';
 $lang['LABEL_NAME'] = 'Name';
 $lang['LABEL_ORDER'] = 'Ordering';
@@ -96,7 +97,8 @@ $lang['LABEL_ADD_MORE'] = 'Add more';
 $lang['LABEL_QUANTITY'] = 'Quantity';
 $lang['LABEL_TOTAL'] = 'Total';
 $lang['LABEL_SEARCH'] = 'Search';
-$lang['MSG_BOOKING_NOT_FOUND'] = 'No Booking available';
+$lang['LABEL_DESCRIPTION'] = 'Description';
+
 
 //Assign User
 $lang['LABEL_USERNAME'] = 'User name';

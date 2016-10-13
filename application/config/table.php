@@ -10,14 +10,15 @@ $config['table_other_sites_visit'] = 'other_sites_visit';
 $config['table_setup_designation'] = 'setup_designation';
 
 
-//pms system setup tables
+//bas system setup tables
 $config['table_system_assigned_group'] = 'bas_system_assigned_group';
 $config['table_system_user_group'] = 'bas_system_user_group';
 $config['table_system_task'] = 'bas_system_task';
 $config['table_system_user_group_role'] = 'bas_system_user_group_role';
 $config['table_history'] = 'bas_history';
 $config['table_history_hack'] = 'bas_history_hack';
-//$config['table_system_assigned_area'] = 'bms_system_assigned_area';
 $config['table_system_site_offline'] = 'bas_system_site_offline';
 
-//pms site tables
+//bas site tables
+//expense setup
+$config['table_setup_expense_category'] = 'bas_setup_expense_category';
