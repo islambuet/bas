@@ -486,21 +486,11 @@ function turn_off_triggers()
     $(document).off("click", ".task_action_all");
     $(document).off("click", ".task_header_all");
 
-    //location setup menu
-    $(document).off("change", "#zone_id");
-    $(document).off("change", "#territory_id");
-    $(document).off("change", "#district_id");
-    $(document).off("change", "#upazila_id");
-    $(document).off("change", "#union_id");
-    $(document).off("change", "#customer_id");
-    $(document).off("change", "#year");
 
-    //classification
-    $(document).off("change", "#crop_id");
-    $(document).off("change", "#classification_id");
+    //expense
+    $(document).off("change", "#category_id");
     $(document).off("change", "#type_id");
-    $(document).off("change", "#skin_type_id");
-    $(document).off("change", "#variety_id");
+    $(document).off("change", "#expense_id");
     
 
 }
