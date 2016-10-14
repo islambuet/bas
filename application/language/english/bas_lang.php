@@ -105,3 +105,6 @@ $lang['LABEL_USERNAME'] = 'User name';
 $lang['LABEL_EMPLOYEE_ID'] = 'Employee id';
 $lang['LABEL_USER_GROUP'] = 'User Group';
 $lang['LABEL_DESIGNATION_NAME'] = 'Designation';
+$lang['LABEL_CATEGORY_NAME'] = 'Category';
+$lang['LABEL_TYPE_NAME'] = 'Type';
+$lang['LABEL_EXPENSE_NAME'] = 'Expense';
