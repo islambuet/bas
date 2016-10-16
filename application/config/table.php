@@ -24,3 +24,4 @@ $config['table_system_site_offline'] = 'bas_system_site_offline';
 $config['table_setup_expense_category'] = 'bas_setup_expense_category';
 $config['table_setup_expense_type'] = 'bas_setup_expense_type';
 $config['table_setup_expense_expense'] = 'bas_setup_expense_expense';
+$config['table_setup_expense_bank'] = 'bas_setup_expense_bank';

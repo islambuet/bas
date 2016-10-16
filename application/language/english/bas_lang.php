@@ -108,3 +108,5 @@ $lang['LABEL_DESIGNATION_NAME'] = 'Designation';
 $lang['LABEL_CATEGORY_NAME'] = 'Category';
 $lang['LABEL_TYPE_NAME'] = 'Type';
 $lang['LABEL_EXPENSE_NAME'] = 'Expense';
+$lang['LABEL_BANK_NAME'] = 'Bank';
+$lang['LABEL_ACCOUNT_NO'] = 'account no';
