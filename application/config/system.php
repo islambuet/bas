@@ -5,6 +5,8 @@ $config['system_max_actions']=7;
 $config['system_status_active']='Active';
 $config['system_status_inactive']='In-Active';
 $config['system_status_delete']='Deleted';
+//bank realated
+$config['system_transaction_cash_in']='CASH_IN';
 
 /*$config['start_year']='2015';
 $config['booking_status_preliminary']='Preliminary';

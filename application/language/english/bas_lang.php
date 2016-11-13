@@ -98,6 +98,7 @@ $lang['LABEL_QUANTITY'] = 'Quantity';
 $lang['LABEL_TOTAL'] = 'Total';
 $lang['LABEL_SEARCH'] = 'Search';
 $lang['LABEL_DESCRIPTION'] = 'Description';
+$lang['LABEL_AMOUNT'] = 'Amount';
 
 
 //Assign User
@@ -110,3 +111,7 @@ $lang['LABEL_TYPE_NAME'] = 'Type';
 $lang['LABEL_EXPENSE_NAME'] = 'Expense';
 $lang['LABEL_BANK_NAME'] = 'Bank';
 $lang['LABEL_ACCOUNT_NO'] = 'account no';
+$lang['LABEL_TRANSACTION_NUMBER'] = 'Transaction Number';
+$lang['LABEL_PAYMENT_WAY'] = 'Payment Way';
+$lang['LABEL_CASH_IN_TYPE'] = 'Cash In Type';
+$lang['LABEL_BANK_BRANCH_NAME'] = 'Branch';
