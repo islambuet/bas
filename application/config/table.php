@@ -28,3 +28,4 @@ $config['table_setup_expense_bank'] = 'bas_setup_expense_bank';
 $config['table_setup_basic_cashin_types'] = 'bas_setup_basic_cashin_types';
 //bank transaction
 $config['table_bank_transaction'] = 'bas_bank_transaction';
+$config['table_bank_transfer_history'] = 'bas_bank_bank_transfer';

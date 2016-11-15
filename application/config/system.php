@@ -7,6 +7,7 @@ $config['system_status_inactive']='In-Active';
 $config['system_status_delete']='Deleted';
 //bank realated
 $config['system_transaction_cash_in']='CASH_IN';
+$config['system_transaction_bank_bank']='TRANSFER_BANK_TO_BANK';
 
 /*$config['start_year']='2015';
 $config['booking_status_preliminary']='Preliminary';
