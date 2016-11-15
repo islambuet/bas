@@ -8,6 +8,7 @@ $config['system_status_delete']='Deleted';
 //bank realated
 $config['system_transaction_cash_in']='CASH_IN';
 $config['system_transaction_bank_bank']='TRANSFER_BANK_TO_BANK';
+$config['system_transaction_bank_petty_cash']='TRANSFER_BANK_TO_PETTY_CASH';
 
 /*$config['start_year']='2015';
 $config['booking_status_preliminary']='Preliminary';

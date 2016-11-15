@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Bank_cash_in extends Root_Controller
+class Bank_transfer_petty_cash extends Root_Controller
 {
     private  $message;
     public $permissions;
@@ -9,8 +9,8 @@ class Bank_cash_in extends Root_Controller
     {
         parent::__construct();
         $this->message="";
-        $this->permissions=User_helper::get_permission('Bank_cash_in');
-        $this->controller_url='bank_cash_in';
+        $this->permissions=User_helper::get_permission('Bank_transfer_petty_cash');
+        $this->controller_url='bank_transfer_petty_cash';
     }
 
     public function index($action="list",$id=0)
@@ -45,7 +45,7 @@ class Bank_cash_in extends Root_Controller
     {
         if(isset($this->permissions['action0'])&&($this->permissions['action0']==1))
         {
-            $data['title']="Cash In To Bank";
+            $data['title']="Bank To Petty Cash Transfer";
             $ajax['status']=true;
             $ajax['system_content'][]=array("id"=>"#system_content","html"=>$this->load->view($this->controller_url."/list",$data,true));
             if($this->message)
@@ -77,7 +77,7 @@ class Bank_cash_in extends Root_Controller
         $this->db->join($this->config->item('ems_basic_setup_payment_ways').' pa','pa.id = bt.payment_way_id','LEFT');
         $this->db->join($this->config->item('ems_basic_setup_bank').' bank','bank.id = bt.bank_id','LEFT');
 
-        $this->db->where('bt.reason',$this->config->item('system_transaction_cash_in'));
+        $this->db->where('bt.reason',$this->config->item('system_transaction_bank_petty_cash'));
         $this->db->where('bt.status !=',$this->config->item('system_status_delete'));
         $this->db->order_by('id','DESC');
         $items=$this->db->get()->result_array();
@@ -93,7 +93,7 @@ class Bank_cash_in extends Root_Controller
         if(isset($this->permissions['action1'])&&($this->permissions['action1']==1))
         {
 
-            $data['title']="New Cash In To Bank";
+            $data['title']="New Bank To Petty Cash Transfer";
             $data["item"] = Array(
                 'id' => 0,
                 'date_transaction' => time(),
@@ -102,14 +102,11 @@ class Bank_cash_in extends Root_Controller
                 'cash_in_type_id' => '',
                 'payment_way_id' => '',
                 'transaction_number' => '',
-                'bank_id' => '',
-                'bank_branch' => '',
                 'remarks' => ''
             );
             $data['accounts']=Query_helper::get_info($this->config->item('ems_basic_setup_arm_bank_accounts'),array('id value','account_no text'),array('status ="'.$this->config->item('system_status_active').'"'));
-            $data['cash_in_types']=Query_helper::get_info($this->config->item('table_setup_basic_cashin_types'),array('id value','name text'),array('status ="'.$this->config->item('system_status_active').'"'));
             $data['payment_ways']=Query_helper::get_info($this->config->item('ems_basic_setup_payment_ways'),array('id value','name text'),array('status ="'.$this->config->item('system_status_active').'"'));
-            $data['banks']=Query_helper::get_info($this->config->item('ems_basic_setup_bank'),array('id value','name text'),array('status ="'.$this->config->item('system_status_active').'"'));
+
             //account numbers
             //cash in types
             //payment ways
@@ -147,10 +144,9 @@ class Bank_cash_in extends Root_Controller
 
             $data['item']=Query_helper::get_info($this->config->item('table_bank_transaction'),'*',array('id ='.$crop_id),1);
             $data['accounts']=Query_helper::get_info($this->config->item('ems_basic_setup_arm_bank_accounts'),array('id value','account_no text'),array('status ="'.$this->config->item('system_status_active').'"'));
-            $data['cash_in_types']=Query_helper::get_info($this->config->item('table_setup_basic_cashin_types'),array('id value','name text'),array('status ="'.$this->config->item('system_status_active').'"'));
             $data['payment_ways']=Query_helper::get_info($this->config->item('ems_basic_setup_payment_ways'),array('id value','name text'),array('status ="'.$this->config->item('system_status_active').'"'));
-            $data['banks']=Query_helper::get_info($this->config->item('ems_basic_setup_bank'),array('id value','name text'),array('status ="'.$this->config->item('system_status_active').'"'));
-            $data['title']='Edit Cash In';
+
+            $data['title']='Edit Bank To Petty Cash Transfer';
             $ajax['status']=true;
             $ajax['system_content'][]=array("id"=>"#system_content","html"=>$this->load->view($this->controller_url."/add_edit",$data,true));
             if($this->message)
@@ -204,8 +200,8 @@ class Bank_cash_in extends Root_Controller
         {
             $data=$this->input->post('item');
             $data['date_transaction']=System_helper::get_time($data['date_transaction']);
-            $data['in_out']=1;
-            $data['reason']=$this->config->item('system_transaction_cash_in');
+            $data['in_out']=-1;
+            $data['reason']=$this->config->item('system_transaction_bank_petty_cash');
             $this->db->trans_start();  //DB Transaction Handle START
             if($id>0)
             {
