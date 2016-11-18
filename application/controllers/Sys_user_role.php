@@ -164,7 +164,7 @@ class Sys_user_role extends Root_Controller
         else
         {
             $ajax['status']=false;
-            $ajax['desk_message']=$this->lang->line("MSG_ROLE_ASSIGN_FAIL");
+            $ajax['system_message']=$this->lang->line("MSG_ROLE_ASSIGN_FAIL");
             $this->jsonReturn($ajax);
         }
     }

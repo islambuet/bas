@@ -101,5 +101,18 @@ class System_helper
         return $users;
 
     }
+    public static function get_designations($ids=array())
+    {
+        $CI =& get_instance();
+        $db_login=$CI->load->database('armalik_login',TRUE);
+        $db_login->from($CI->config->item('table_setup_designation'));
+        if(sizeof($ids)>0)
+        {
+            $db_login->where_in('id',$ids);
+        }
+        $db_login->order_by('ordering');
+        $results=$db_login->get()->result_array();
+        return $results;
+    }
 
 }

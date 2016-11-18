@@ -30,3 +30,4 @@ $config['table_setup_basic_cashin_types'] = 'bas_setup_basic_cashin_types';
 $config['table_bank_transaction'] = 'bas_bank_transaction';
 $config['table_bank_transfer_history'] = 'bas_bank_bank_transfer';
 $config['table_setup_tour_daily_item'] = 'bas_setup_tour_daily_item';
+$config['table_setup_tour_designation_allowance'] = 'bas_setup_tour_designation_allowance';
