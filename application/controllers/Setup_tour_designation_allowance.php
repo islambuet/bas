@@ -11,7 +11,7 @@ class Setup_tour_designation_allowance extends Root_Controller
         parent::__construct();
         $this->message="";
         $this->permissions=User_helper::get_permission('Setup_tour_designation_allowance');
-        $this->controller_url='Setup_tour_designation_allowance';
+        $this->controller_url='setup_tour_designation_allowance';
     }
     public function index($action="list",$id=0)
     {
