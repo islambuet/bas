@@ -8,6 +8,8 @@ $config['table_setup_users_other_sites'] = 'setup_users_other_sites';
 $config['table_system_other_sites'] = 'system_other_sites';
 $config['table_other_sites_visit'] = 'other_sites_visit';
 $config['table_setup_designation'] = 'setup_designation';
+$config['table_setup_company'] = 'login_setup_company';
+$config['table_setup_users_company'] = 'login_setup_users_company';
 
 
 //bas system setup tables
@@ -31,3 +33,5 @@ $config['table_bank_transaction'] = 'bas_bank_transaction';
 $config['table_bank_transfer_history'] = 'bas_bank_bank_transfer';
 $config['table_setup_tour_daily_item'] = 'bas_setup_tour_daily_item';
 $config['table_setup_tour_designation_allowance'] = 'bas_setup_tour_designation_allowance';
+$config['table_petty_cash_expense'] = 'bas_petty_cash_expense';
+$config['table_petty_cash_expense_details'] = 'bas_petty_cash_expense_details';
