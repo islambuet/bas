@@ -9,6 +9,10 @@
     {
         $action_data["action_edit"]=base_url($CI->controller_url."/index/edit");
     }
+    if(isset($CI->permissions['action0'])&&($CI->permissions['action0']==1))
+    {
+        $action_data["action_details"]=base_url($CI->controller_url."/index/details");
+    }
     if(isset($CI->permissions['action4'])&&($CI->permissions['action4']==1))
     {
         $action_data["action_print"]='print';
@@ -35,10 +39,15 @@
         <div class="col-xs-12" style="margin-bottom: 20px;">
             <div class="col-xs-12" style="margin-bottom: 20px;">
                 <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="id"><?php echo $CI->lang->line('LABEL_ID'); ?></label>
-                <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="name"><?php echo $CI->lang->line('LABEL_NAME'); ?></label>
-                <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="ordering"><?php echo $CI->lang->line('LABEL_ORDER'); ?></label>
-                <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="status"><?php echo $CI->lang->line('STATUS'); ?></label>
-
+                <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="amount"><?php echo $CI->lang->line('LABEL_AMOUNT'); ?></label>
+                <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="company_name"><?php echo $CI->lang->line('LABEL_COMPANY_NAME'); ?></label>
+                <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="advance_for">Advance For</label>
+                <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="created_by">Created By</label>
+                <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="created_date">Created Date</label>
+                <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="status_checkin_advance">Check In</label>
+                <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="status_approval_advance">Approval</label>
+                <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="status_payment_advance">Payment</label>
+                <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="remarks_advance">Remarks</label>
             </div>
         </div>
     <?php
@@ -61,9 +70,15 @@
             dataType: "json",
             dataFields: [
                 { name: 'id', type: 'int' },
-                { name: 'name', type: 'string' },
-                { name: 'ordering', type: 'int' },
-                { name: 'status', type: 'string' }
+                { name: 'amount', type: 'string' },
+                { name: 'company_name', type: 'string' },
+                { name: 'advance_for', type: 'string' },
+                { name: 'created_by', type: 'string' },
+                { name: 'created_date', type: 'string' },
+                { name: 'status_checkin_advance', type: 'string' },
+                { name: 'status_approval_advance', type: 'string' },
+                { name: 'status_payment_advance', type: 'string' },
+                { name: 'remarks_advance', type: 'string' }
             ],
             id: 'id',
             url: url
@@ -87,9 +102,16 @@
                 autoheight: true,
                 columns: [
                     { text: '<?php echo $CI->lang->line('LABEL_ID'); ?>', dataField: 'id',width:'50',cellsAlign:'right'},
-                    { text: '<?php echo $CI->lang->line('LABEL_NAME'); ?>', dataField: 'name'},
-                    { text: '<?php echo $CI->lang->line('LABEL_ORDER'); ?>', dataField: 'ordering',width:'100',cellsalign: 'right'},
-                    { text: '<?php echo $CI->lang->line('STATUS'); ?>', dataField: 'status',filtertype: 'list',width:'150',cellsalign: 'right'}
+                    { text: '<?php echo $CI->lang->line('LABEL_AMOUNT'); ?>', dataField: 'amount',width:'100',cellsAlign:'right'},
+                    { text: '<?php echo $CI->lang->line('LABEL_COMPANY_NAME'); ?>', dataField: 'company_name',filtertype: 'list',width:'150',cellsalign: 'right'},
+                    { text: 'Advance For', dataField: 'advance_for',width:'100'},
+                    { text: 'Created By', dataField: 'created_by',width:'100'},
+                    { text: 'Created Date', dataField: 'created_date',width:'100'},
+                    { text: 'Check In', dataField: 'status_checkin_advance',filtertype: 'list',width:'150',cellsalign: 'right'},
+                    { text: 'Approval', dataField: 'status_approval_advance',filtertype: 'list',width:'150',cellsalign: 'right'},
+                    { text: 'Payment', dataField: 'status_payment_advance',filtertype: 'list',width:'150',cellsalign: 'right'},
+                    { text: '<?php echo $CI->lang->line('LABEL_REMARKS'); ?>', dataField: 'remarks_advance'}
+
                 ]
             });
     });

@@ -68,7 +68,14 @@
                 </select>
             </div>
         </div>
-
+        <div style="" class="row show-grid" id="remarks_advance">
+            <div class="col-xs-4">
+                <label class="control-label pull-right"><?php echo $CI->lang->line('LABEL_REMARKS');?></label>
+            </div>
+            <div class="col-sm-4 col-xs-8">
+                <textarea class="form-control" name="item[remarks_advance]"><?php echo $item['remarks_advance']; ?></textarea>
+            </div>
+        </div>
         <div id="system_report_container">
 
         </div>

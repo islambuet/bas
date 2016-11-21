@@ -82,7 +82,7 @@ class System_helper
         $data['date_created_string']=System_helper::display_date($time);
         $CI->db->insert($CI->config->item('table_history_hack'), $data);
     }
-    public static function get_users_info($user_ids)
+    public static function get_users_info($user_ids=array())
     {
         $CI =& get_instance();
         $db_login=$CI->load->database('armalik_login',TRUE);

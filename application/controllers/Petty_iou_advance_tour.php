@@ -70,14 +70,30 @@ class Petty_iou_advance_tour extends Root_Controller
     }
     private function system_get_items()
     {
-        /*$user = User_helper::get_user();
+        $results=System_helper::get_companies();
+        $companies=array();
+        foreach($results as $result)
+        {
+            $companies[$result['id']]=$result;
+        }
+        $employees=System_helper::get_users_info();
+
+        $user = User_helper::get_user();
         $this->db->from($this->config->item('table_petty_cash_expense'));
         if(!(in_array($user->user_group,array(1,2))))
         {
             $this->db->where('user_created',$user->user_id);
         }
-        $items=$this->db->get()->result_array();*/
-        $items=array();
+        $this->db->order_by('id DESC');
+        $items=$this->db->get()->result_array();
+        foreach($items as &$item)
+        {
+            $item['amount']=number_format($item['amount_advance'],2);
+            $item['company_name']=$companies[$item['company_id']]['full_name'];
+            $item['advance_for']=$employees[$item['employee_id']]['name'];
+            $item['created_by']=$employees[$item['user_created']]['name'];
+            $item['created_date']=System_helper::display_date($item['date_created']);
+        }
         $this->jsonReturn($items);
     }
 
@@ -90,7 +106,8 @@ class Petty_iou_advance_tour extends Root_Controller
             $data["item"] = Array(
                 'id' => 0,
                 'company_id' => '',
-                'employee_id' => ''
+                'employee_id' => '',
+                'remarks_advance' => ''
             );
             $data['num_days']='';
             $data['companies']=System_helper::get_companies();
@@ -189,6 +206,7 @@ class Petty_iou_advance_tour extends Root_Controller
     {
         $id = $this->input->post("id");
         $user = User_helper::get_user();
+        $time=time();
         if($id>0)
         {
             if(!(isset($this->permissions['action2'])&&($this->permissions['action2']==1)))
@@ -218,24 +236,129 @@ class Petty_iou_advance_tour extends Root_Controller
         }
         else
         {
+            $num_days=$this->input->post('num_days');
+            $data=$this->input->post('item');
+            $data['expense_type']=$this->config->item('system_petty_tour');
+            $employee_info=System_helper::get_users_info(array($data['employee_id']));
+            if(!$employee_info)
+            {
+                $ajax['status']=true;
+                $ajax['system_message']="Employee setup failed";
+                $this->jsonReturn($ajax);
+                die();
+            }
+            if(!($employee_info[$data['employee_id']]['designation']>0))
+            {
+                $ajax['status']=true;
+                $ajax['system_message']="Designation for this employee cannot determine";
+                $this->jsonReturn($ajax);
+                die();
+            }
+            $daily_allowance=Query_helper::get_info($this->config->item('table_setup_tour_designation_allowance'),'*',array('revision =1','designation_id ='.$employee_info[$data['employee_id']]['designation']));
+            $daily_total=0;
+            foreach($daily_allowance as $row)
+            {
+                $daily_total+=$row['amount']*$num_days;
+            }
+            $fixed_total=0;
+            $tour=$this->input->post('tour');
+            foreach($tour['FIXED'] as $row)
+            {
+                if($row>0)
+                {
+                    $fixed_total+=$row;
+                }
 
-            $data=$this->input->post('crop');
+            }
+            $data['amount_advance']=$daily_total+$fixed_total;
+            $data['amount_actual']=0;
+            $data['amount_return']=0;
             $this->db->trans_start();  //DB Transaction Handle START
+            $petty_id=$id;
             if($id>0)
             {
                 $data['user_updated'] = $user->user_id;
-                $data['date_updated'] = time();
-
-                Query_helper::update($this->config->item('table_setup_basic_cashin_types'),$data,array("id = ".$id));
+                $data['date_updated'] = $time;
+                Query_helper::update($this->config->item('table_petty_cash_expense'),$data,array("id = ".$id));
 
             }
             else
             {
 
                 $data['user_created'] = $user->user_id;
-                $data['date_created'] = time();
-                Query_helper::add($this->config->item('table_setup_basic_cashin_types'),$data);
+                $data['date_created'] = $time;
+                $petty_id=Query_helper::add($this->config->item('table_petty_cash_expense'),$data);
             }
+            $results=Query_helper::get_info($this->config->item('table_petty_cash_expense_details'),'*',array('petty_id ='.$petty_id));
+            $details_item=array();
+            foreach($results as $result)
+            {
+                if($result['purpose_id']>0)
+                {
+                    $details_item['DAILY'][$result['purpose_id']]=$result['id'];
+                }
+                else
+                {
+                    $details_item['FIXED'][$result['purpose_name']]=$result['id'];
+                }
+            }
+            $this->db->where('petty_id',$petty_id);
+            $this->db->set('status',$this->config->item('system_status_delete'));
+            $this->db->update($this->config->item('table_petty_cash_expense_details'));
+            foreach($daily_allowance as $row)
+            {
+                $data_daily=array();
+                $data_daily['petty_id']=$petty_id;
+                $data_daily['expense_type']=$this->config->item('system_petty_tour');
+                $data_daily['purpose_name']='';
+                $data_daily['purpose_id']=$row['id'];
+                $data_daily['amount']=$row['amount']*$num_days;
+                $data_daily['status']=$this->config->item('system_status_active');
+                if(isset($details_item['DAILY'][$row['id']]))
+                {
+                    $data_daily['user_updated'] = $user->user_id;
+                    $data_daily['date_updated'] = $time;
+                    Query_helper::update($this->config->item('table_petty_cash_expense_details'),$data_daily,array("id = ".$details_item['DAILY'][$row['id']]));
+                }
+                else
+                {
+                    $data_daily['user_created'] = $user->user_id;
+                    $data_daily['date_created'] = $time;
+                    Query_helper::add($this->config->item('table_petty_cash_expense_details'),$data_daily);
+                }
+            }
+            foreach($tour['FIXED'] as $purpose_name=>$amount)
+            {
+                $data_fixed=array();
+                $data_fixed['petty_id']=$petty_id;
+                $data_fixed['expense_type']=$this->config->item('system_petty_tour');
+                $data_fixed['purpose_name']=$purpose_name;
+                $data_fixed['purpose_id']=0;
+                if($amount>0)
+                {
+                    $data_fixed['amount']=$amount;
+                }
+                else
+                {
+                    $data_fixed['amount']=0;
+                }
+                $data_fixed['status']=$this->config->item('system_status_active');
+                if(isset($details_item['FIXED'][$purpose_name]))
+                {
+                    $data_fixed['user_updated'] = $user->user_id;
+                    $data_fixed['date_updated'] = $time;
+                    Query_helper::update($this->config->item('table_petty_cash_expense_details'),$data_fixed,array("id = ".$details_item['FIXED'][$purpose_name]));
+                }
+                else
+                {
+                    $data_fixed['user_created'] = $user->user_id;
+                    $data_fixed['date_created'] = $time;
+                    Query_helper::add($this->config->item('table_petty_cash_expense_details'),$data_fixed);
+                }
+
+
+            }
+
             $this->db->trans_complete();   //DB Transaction Handle END
             if ($this->db->trans_status() === TRUE)
             {
