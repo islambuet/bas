@@ -102,14 +102,14 @@ class Petty_iou_advance_tour extends Root_Controller
         if(isset($this->permissions['action1'])&&($this->permissions['action1']==1))
         {
 
-            $data['title']="Create New Cash In Type";
+            $data['title']="Create New Tour Advance";
             $data["item"] = Array(
                 'id' => 0,
+                'num_days' => '',
                 'company_id' => '',
                 'employee_id' => '',
                 'remarks_advance' => ''
             );
-            $data['num_days']='';
             $data['companies']=System_helper::get_companies();
             $data['employees']=array();
             $ajax['system_page_url']=site_url($this->controller_url."/index/add");
@@ -135,22 +135,80 @@ class Petty_iou_advance_tour extends Root_Controller
         {
             if(($this->input->post('id')))
             {
-                $crop_id=$this->input->post('id');
+                $item_id=$this->input->post('id');
             }
             else
             {
-                $crop_id=$id;
+                $item_id=$id;
             }
 
-            $data['crop']=Query_helper::get_info($this->config->item('table_setup_basic_cashin_types'),'*',array('id ='.$crop_id),1);
-            $data['title']="Edit Cashin Type (".$data['crop']['name'].')';
+            $data['item']=Query_helper::get_info($this->config->item('table_petty_cash_expense'),'*',array('id ='.$item_id),1);
+            $data['companies']=System_helper::get_companies();
+
+            $db_login=$this->load->database('armalik_login',TRUE);
+            $db_login->from($this->config->item('table_setup_users_company').' uc');
+            $db_login->select('ui.user_id value');
+            $db_login->select('ui.name text');
+            $db_login->join($this->config->item('table_setup_user_info').' ui','ui.user_id = uc.user_id','INNER');
+            $db_login->where('uc.company_id',$data['item']['company_id']);
+            $db_login->where('uc.revision',1);
+            $db_login->where('ui.revision',1);
+            $data['employees']=$db_login->get()->result_array();
+
+            $data['details']['tour_allowance_items']=Query_helper::get_info($this->config->item('table_setup_tour_daily_item'),array('id value','name text'),array('status ="'.$this->config->item('system_status_active').'"'),0,0,array('ordering'));
+            $data['details']['daily_total']=0;
+
+
+            $results=Query_helper::get_info($this->config->item('table_petty_cash_expense_details'),'*',array('petty_id ='.$item_id,'status ="'.$this->config->item('system_status_active').'"'));
+            $details_item=array();
+
+            foreach($results as $result)
+            {
+                if($result['purpose_id']>0)
+                {
+                    $details_item['DAILY'][$result['purpose_id']]=$result['amount'];
+                }
+                else
+                {
+                    $details_item['FIXED'][$result['purpose_name']]=$result['amount'];
+                }
+            }
+            $data['details']['DAILY']=array();
+            $data['details']['daily_total']=0;
+            foreach($data['details']['tour_allowance_items'] as $row)
+            {
+                if(isset($details_item['DAILY'][$row['value']]))
+                {
+                    $data['details']['DAILY'][$row['value']]=$details_item['DAILY'][$row['value']];
+                    $data['details']['daily_total']+=$details_item['DAILY'][$row['value']];
+                }
+            }
+
+            $data['details']['FIXED']['HOTEL']='';
+            if(isset($details_item['FIXED']['HOTEL']))
+            {
+                $data['details']['FIXED']['HOTEL']=$details_item['FIXED']['HOTEL'];
+            }
+            $data['details']['FIXED']['TRANSPORT']='';
+            if(isset($details_item['FIXED']['TRANSPORT']))
+            {
+                $data['details']['FIXED']['TRANSPORT']=$details_item['FIXED']['TRANSPORT'];
+            }
+            $data['details']['FIXED']['OTHER']='';
+            if(isset($details_item['FIXED']['OTHER']))
+            {
+                $data['details']['FIXED']['OTHER']=$details_item['FIXED']['OTHER'];
+            }
+            $data['details']['total']=number_format($data['item']['amount_advance'],2);
+
+            $data['title']='Edit Tour Advance';
             $ajax['status']=true;
             $ajax['system_content'][]=array("id"=>"#system_content","html"=>$this->load->view($this->controller_url."/add_edit",$data,true));
             if($this->message)
             {
                 $ajax['system_message']=$this->message;
             }
-            $ajax['system_page_url']=site_url($this->controller_url.'/index/edit/'.$crop_id);
+            $ajax['system_page_url']=site_url($this->controller_url.'/index/edit/'.$item_id);
             $this->jsonReturn($ajax);
         }
         else
@@ -236,8 +294,8 @@ class Petty_iou_advance_tour extends Root_Controller
         }
         else
         {
-            $num_days=$this->input->post('num_days');
             $data=$this->input->post('item');
+            $num_days=$data['num_days'];
             $data['expense_type']=$this->config->item('system_petty_tour');
             $employee_info=System_helper::get_users_info(array($data['employee_id']));
             if(!$employee_info)
@@ -311,14 +369,14 @@ class Petty_iou_advance_tour extends Root_Controller
                 $data_daily['petty_id']=$petty_id;
                 $data_daily['expense_type']=$this->config->item('system_petty_tour');
                 $data_daily['purpose_name']='';
-                $data_daily['purpose_id']=$row['id'];
+                $data_daily['purpose_id']=$row['allowance_id'];
                 $data_daily['amount']=$row['amount']*$num_days;
                 $data_daily['status']=$this->config->item('system_status_active');
-                if(isset($details_item['DAILY'][$row['id']]))
+                if(isset($details_item['DAILY'][$row['allowance_id']]))
                 {
                     $data_daily['user_updated'] = $user->user_id;
                     $data_daily['date_updated'] = $time;
-                    Query_helper::update($this->config->item('table_petty_cash_expense_details'),$data_daily,array("id = ".$details_item['DAILY'][$row['id']]));
+                    Query_helper::update($this->config->item('table_petty_cash_expense_details'),$data_daily,array("id = ".$details_item['DAILY'][$row['allowance_id']]));
                 }
                 else
                 {

@@ -44,7 +44,7 @@
                     <?php
                     foreach($employees as $row)
                     {?>
-                        <option value="<?php echo $row['id']?>" <?php if($row['user_id']==$item['employee_id']){ echo "selected";}?>><?php echo $row['name'].'('.$row['employee_id'].')';?></option>
+                        <option value="<?php echo $row['value']?>" <?php if($row['value']==$item['employee_id']){ echo "selected";}?>><?php echo $row['text'];?></option>
                     <?php
                     }
                     ?>
@@ -56,12 +56,12 @@
                 <label class="control-label pull-right"><?php echo $CI->lang->line('LABEL_NUM_DAYS');?><span style="color:#FF0000">*</span></label>
             </div>
             <div class="col-sm-4 col-xs-8">
-                <select id="num_days" name="num_days" class="form-control">
+                <select id="num_days" name="item[num_days]" class="form-control">
                     <option value=""><?php echo $this->lang->line('SELECT');?></option>
                     <?php
                     for($i=1;$i<=31;$i++)
                     {?>
-                        <option value="<?php echo $i;?>" <?php if($i==$num_days){ echo "selected";}?>><?php echo $i;?></option>
+                        <option value="<?php echo $i;?>" <?php if($i==$item['num_days']){ echo "selected";}?>><?php echo $i;?></option>
                     <?php
                     }
                     ?>
@@ -77,7 +77,12 @@
             </div>
         </div>
         <div id="system_report_container">
-
+        <?php
+        if(($item['id'])>0)
+        {
+            $this->load->view($CI->controller_url."/form",$details);
+        }
+        ?>
         </div>
     </div>
 

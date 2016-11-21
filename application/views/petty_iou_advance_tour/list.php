@@ -40,6 +40,7 @@
             <div class="col-xs-12" style="margin-bottom: 20px;">
                 <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="id"><?php echo $CI->lang->line('LABEL_ID'); ?></label>
                 <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="amount"><?php echo $CI->lang->line('LABEL_AMOUNT'); ?></label>
+                <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="num_days"><?php echo $CI->lang->line('LABEL_NUM_DAYS'); ?></label>
                 <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="company_name"><?php echo $CI->lang->line('LABEL_COMPANY_NAME'); ?></label>
                 <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="advance_for">Advance For</label>
                 <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="created_by">Created By</label>
@@ -71,6 +72,7 @@
             dataFields: [
                 { name: 'id', type: 'int' },
                 { name: 'amount', type: 'string' },
+                { name: 'num_days', type: 'string' },
                 { name: 'company_name', type: 'string' },
                 { name: 'advance_for', type: 'string' },
                 { name: 'created_by', type: 'string' },
@@ -103,6 +105,7 @@
                 columns: [
                     { text: '<?php echo $CI->lang->line('LABEL_ID'); ?>', dataField: 'id',width:'50',cellsAlign:'right'},
                     { text: '<?php echo $CI->lang->line('LABEL_AMOUNT'); ?>', dataField: 'amount',width:'100',cellsAlign:'right'},
+                    { text: '<?php echo $CI->lang->line('LABEL_NUM_DAYS'); ?>', dataField: 'num_days',width:'100',cellsAlign:'right'},
                     { text: '<?php echo $CI->lang->line('LABEL_COMPANY_NAME'); ?>', dataField: 'company_name',filtertype: 'list',width:'150',cellsalign: 'right'},
                     { text: 'Advance For', dataField: 'advance_for',width:'100'},
                     { text: 'Created By', dataField: 'created_by',width:'100'},
