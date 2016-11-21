@@ -143,6 +143,13 @@ class Petty_iou_advance_tour extends Root_Controller
             }
 
             $data['item']=Query_helper::get_info($this->config->item('table_petty_cash_expense'),'*',array('id ='.$item_id),1);
+            if($data['item']['status_checkin_advance']!=$this->config->item('system_status_pending'))
+            {
+                $ajax['status']=false;
+                $ajax['system_message']="You Cannot Edit now.";
+                $this->jsonReturn($ajax);
+                die();
+            }
             $data['companies']=System_helper::get_companies();
 
             $db_login=$this->load->database('armalik_login',TRUE);
@@ -166,11 +173,11 @@ class Petty_iou_advance_tour extends Root_Controller
             {
                 if($result['purpose_id']>0)
                 {
-                    $details_item['DAILY'][$result['purpose_id']]=$result['amount'];
+                    $details_item['DAILY'][$result['purpose_id']]=$result['amount_advance'];
                 }
                 else
                 {
-                    $details_item['FIXED'][$result['purpose_name']]=$result['amount'];
+                    $details_item['FIXED'][$result['purpose_name']]=$result['amount_advance'];
                 }
             }
             $data['details']['DAILY']=array();
@@ -370,7 +377,9 @@ class Petty_iou_advance_tour extends Root_Controller
                 $data_daily['expense_type']=$this->config->item('system_petty_tour');
                 $data_daily['purpose_name']='';
                 $data_daily['purpose_id']=$row['allowance_id'];
-                $data_daily['amount']=$row['amount']*$num_days;
+                $data_daily['amount_advance']=$row['amount']*$num_days;
+                $data_daily['amount_actual']=0;
+                $data_daily['amount_return']=0;
                 $data_daily['status']=$this->config->item('system_status_active');
                 if(isset($details_item['DAILY'][$row['allowance_id']]))
                 {
@@ -394,12 +403,14 @@ class Petty_iou_advance_tour extends Root_Controller
                 $data_fixed['purpose_id']=0;
                 if($amount>0)
                 {
-                    $data_fixed['amount']=$amount;
+                    $data_fixed['amount_advance']=$amount;
                 }
                 else
                 {
-                    $data_fixed['amount']=0;
+                    $data_fixed['amount_advance']=0;
                 }
+                $data_fixed['amount_actual']=0;
+                $data_fixed['amount_return']=0;
                 $data_fixed['status']=$this->config->item('system_status_active');
                 if(isset($details_item['FIXED'][$purpose_name]))
                 {
@@ -446,6 +457,16 @@ class Petty_iou_advance_tour extends Root_Controller
         {
             $this->message="Unfinished Input";
             return false;
+        }
+        $item_id = $this->input->post("id");
+        if($item_id>0)
+        {
+            $info=Query_helper::get_info($this->config->item('table_petty_cash_expense'),'*',array('id ='.$item_id),1);
+            if($info['status_checkin_advance']!=$this->config->item('system_status_pending'))
+            {
+                $this->message="You Cannot Edit now.";
+                return false;
+            }
         }
         return true;
     }

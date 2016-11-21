@@ -65,7 +65,7 @@
                     <label class="control-label pull-right"><?php echo $CI->lang->line('LABEL_OTHER_BILL');?></label>
                 </div>
                 <div class="col-sm-4 col-xs-8">
-                    <input type="text" name="tour[FIXED][OTHER]" id="other" class="form-control float_type_positive" style="text-align: left;" value="<?php echo $FIXED['TRANSPORT'] ?>" >
+                    <input type="text" name="tour[FIXED][OTHER]" id="other" class="form-control float_type_positive" style="text-align: left;" value="<?php echo $FIXED['OTHER'] ?>" >
                 </div>
             </div>
         </div>
