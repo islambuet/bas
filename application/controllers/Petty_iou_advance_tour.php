@@ -84,6 +84,7 @@ class Petty_iou_advance_tour extends Root_Controller
         {
             $this->db->where('user_created',$user->user_id);
         }
+        $this->db->where('expense_type',$this->config->item('system_petty_tour'));
         $this->db->order_by('id DESC');
         $items=$this->db->get()->result_array();
         foreach($items as &$item)
