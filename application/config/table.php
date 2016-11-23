@@ -34,4 +34,4 @@ $config['table_bank_transfer_history'] = 'bas_bank_bank_transfer';
 $config['table_setup_tour_daily_item'] = 'bas_setup_tour_daily_item';
 $config['table_setup_tour_designation_allowance'] = 'bas_setup_tour_designation_allowance';
 $config['table_petty_cash_expense'] = 'bas_petty_cash_expense';
-$config['table_petty_cash_expense_details'] = 'bas_petty_cash_expense_details';
+$config['table_petty_cash_iou_tour_details'] = 'bas_petty_cash_iou_tour_details';

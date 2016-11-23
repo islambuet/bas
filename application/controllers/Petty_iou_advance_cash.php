@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Petty_iou_advance_conveyance extends Root_Controller
+class Petty_iou_advance_cash extends Root_Controller
 {
     private  $message;
     public $permissions;
@@ -9,8 +9,8 @@ class Petty_iou_advance_conveyance extends Root_Controller
     {
         parent::__construct();
         $this->message="";
-        $this->permissions=User_helper::get_permission('Petty_iou_advance_conveyance');
-        $this->controller_url='petty_iou_advance_conveyance';
+        $this->permissions=User_helper::get_permission('Petty_iou_advance_cash');
+        $this->controller_url='petty_iou_advance_cash';
         //$this->load->model("sys_module_task_model");
     }
 
@@ -32,6 +32,10 @@ class Petty_iou_advance_conveyance extends Root_Controller
         {
             $this->system_edit($id);
         }
+        elseif($action=="details")
+        {
+            $this->system_details($id);
+        }
         elseif($action=="save")
         {
             $this->system_save();
@@ -46,7 +50,7 @@ class Petty_iou_advance_conveyance extends Root_Controller
     {
         if(isset($this->permissions['action0'])&&($this->permissions['action0']==1))
         {
-            $data['title']="IOU Conveyance Advance";
+            $data['title']="IOU Cash Advance";
             $ajax['status']=true;
             $ajax['system_content'][]=array("id"=>"#system_content","html"=>$this->load->view($this->controller_url."/list",$data,true));
             if($this->message)
@@ -80,7 +84,7 @@ class Petty_iou_advance_conveyance extends Root_Controller
         {
             $this->db->where('user_created',$user->user_id);
         }
-        $this->db->where('expense_type',$this->config->item('system_petty_conveyance'));
+        $this->db->where('expense_type',$this->config->item('system_petty_iou_cash'));
         $this->db->order_by('id DESC');
         $items=$this->db->get()->result_array();
         foreach($items as &$item)
@@ -99,9 +103,10 @@ class Petty_iou_advance_conveyance extends Root_Controller
         if(isset($this->permissions['action1'])&&($this->permissions['action1']==1))
         {
 
-            $data['title']="Create New Conveyance Advance";
+            $data['title']="New Cash Requisition";
             $data["item"] = Array(
                 'id' => 0,
+                'title'=>'',
                 'company_id' => '',
                 'employee_id' => '',
                 'amount_advance' => '',
@@ -140,7 +145,7 @@ class Petty_iou_advance_conveyance extends Root_Controller
             }
 
             $data['item']=Query_helper::get_info($this->config->item('table_petty_cash_expense'),'*',array('id ='.$item_id),1);
-            if($data['item']['status_checkin_advance']!=$this->config->item('system_status_pending'))
+            if($data['item']['status_approval_advance']!=$this->config->item('system_status_pending'))
             {
                 $ajax['status']=false;
                 $ajax['system_message']="You Cannot Edit now.";
@@ -152,14 +157,15 @@ class Petty_iou_advance_conveyance extends Root_Controller
             $db_login=$this->load->database('armalik_login',TRUE);
             $db_login->from($this->config->item('table_setup_users_company').' uc');
             $db_login->select('ui.user_id value');
-            $db_login->select('ui.name text');
+            $db_login->select('CONCAT(u.employee_id,"-",ui.name) text',false);
             $db_login->join($this->config->item('table_setup_user_info').' ui','ui.user_id = uc.user_id','INNER');
+            $db_login->join($this->config->item('table_setup_user').' u','u.id = ui.user_id','INNER');
             $db_login->where('uc.company_id',$data['item']['company_id']);
             $db_login->where('uc.revision',1);
             $db_login->where('ui.revision',1);
             $data['employees']=$db_login->get()->result_array();
 
-            $data['title']='Edit Conveyance Advance';
+            $data['title']='Edit Cash Requisition';
             $ajax['status']=true;
             $ajax['system_content'][]=array("id"=>"#system_content","html"=>$this->load->view($this->controller_url."/add_edit",$data,true));
             if($this->message)
@@ -167,6 +173,51 @@ class Petty_iou_advance_conveyance extends Root_Controller
                 $ajax['system_message']=$this->message;
             }
             $ajax['system_page_url']=site_url($this->controller_url.'/index/edit/'.$item_id);
+            $this->jsonReturn($ajax);
+        }
+        else
+        {
+            $ajax['status']=false;
+            $ajax['system_message']=$this->lang->line("YOU_DONT_HAVE_ACCESS");
+            $this->jsonReturn($ajax);
+        }
+    }
+    private function system_details($id)
+    {
+        if(isset($this->permissions['action0'])&&($this->permissions['action0']==1))
+        {
+            if(($this->input->post('id')))
+            {
+                $item_id=$this->input->post('id');
+            }
+            else
+            {
+                $item_id=$id;
+            }
+
+            $data['item']=Query_helper::get_info($this->config->item('table_petty_cash_expense'),'*',array('id ='.$item_id),1);
+
+            $data['companies']=System_helper::get_companies();
+
+            /*$db_login=$this->load->database('armalik_login',TRUE);
+            $db_login->from($this->config->item('table_setup_users_company').' uc');
+            $db_login->select('ui.user_id value');
+            $db_login->select('ui.name text');
+            $db_login->join($this->config->item('table_setup_user_info').' ui','ui.user_id = uc.user_id','INNER');
+            $db_login->where('uc.company_id',$data['item']['company_id']);
+            $db_login->where('uc.revision',1);
+            $db_login->where('ui.revision',1);
+            $data['employees']=$db_login->get()->result_array();
+            */
+
+            $data['title']='Details of Conveyance Advance ('.$item_id.')';
+            $ajax['status']=true;
+            $ajax['system_content'][]=array("id"=>"#system_content","html"=>$this->load->view($this->controller_url."/details",$data,true));
+            if($this->message)
+            {
+                $ajax['system_message']=$this->message;
+            }
+            $ajax['system_page_url']=site_url($this->controller_url.'/index/details/'.$item_id);
             $this->jsonReturn($ajax);
         }
         else
@@ -212,11 +263,15 @@ class Petty_iou_advance_conveyance extends Root_Controller
         else
         {
             $data=$this->input->post('item');
-            $data['expense_type']=$this->config->item('system_petty_conveyance');
+            $data['expense_type']=$this->config->item('system_petty_iou_cash');
             $data['amount_actual']=0;
             $data['amount_return']=0;
+            $data['status_checking_advance']=$this->config->item('system_status_pending');
+            $data['date_checking_advance']=null;
+            $data['user_checking_advance']=null;
+            $data['remarks_checking_advance']=null;
             $this->db->trans_start();  //DB Transaction Handle START
-            $petty_id=$id;
+
             if($id>0)
             {
                 $data['user_updated'] = $user->user_id;
@@ -229,7 +284,7 @@ class Petty_iou_advance_conveyance extends Root_Controller
 
                 $data['user_created'] = $user->user_id;
                 $data['date_created'] = $time;
-                $petty_id=Query_helper::add($this->config->item('table_petty_cash_expense'),$data);
+                Query_helper::add($this->config->item('table_petty_cash_expense'),$data);
             }
             $this->db->trans_complete();   //DB Transaction Handle END
             if ($this->db->trans_status() === TRUE)
@@ -258,6 +313,7 @@ class Petty_iou_advance_conveyance extends Root_Controller
         $this->load->library('form_validation');
         $this->form_validation->set_rules('item[company_id]',$this->lang->line('LABEL_COMPANY_NAME'),'required');
         $this->form_validation->set_rules('item[employee_id]',$this->lang->line('LABEL_EMPLOYEE_NAME'),'required');
+        $this->form_validation->set_rules('item[title]',$this->lang->line('LABEL_PURPOSE'),'required');
         $this->form_validation->set_rules('item[amount_advance]',$this->lang->line('LABEL_AMOUNT'),'required');
 
 

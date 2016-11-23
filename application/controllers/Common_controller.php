@@ -39,8 +39,9 @@ class Common_controller extends Root_Controller
         $db_login=$this->load->database('armalik_login',TRUE);
         $db_login->from($this->config->item('table_setup_users_company').' uc');
         $db_login->select('ui.user_id value');
-        $db_login->select('ui.name text');
+        $db_login->select('CONCAT(u.employee_id,"-",ui.name) text',false);
         $db_login->join($this->config->item('table_setup_user_info').' ui','ui.user_id = uc.user_id','INNER');
+        $db_login->join($this->config->item('table_setup_user').' u','u.id = ui.user_id','INNER');
         $db_login->where('uc.company_id',$company_id);
         $db_login->where('uc.revision',1);
         $db_login->where('ui.revision',1);

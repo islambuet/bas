@@ -99,6 +99,14 @@ $lang['LABEL_TOTAL'] = 'Total';
 $lang['LABEL_SEARCH'] = 'Search';
 $lang['LABEL_DESCRIPTION'] = 'Description';
 $lang['LABEL_AMOUNT'] = 'Amount';
+$lang['LABEL_TITLE'] = 'Title';
+$lang['LABEL_PURPOSE'] = 'Purpose';
+$lang['LABEL_PAYMENT'] = 'Payment';
+$lang['LABEL_APPROVE'] = 'Approve';
+$lang['LABEL_CHECKING'] = 'Checking';
+$lang['LABEL_CREATED_BY'] = 'Created By';
+$lang['LABEL_CREATED_DATE'] = 'Created Date';
+$lang['LABEL_ADVANCE_FOR'] = 'Advance For';
 
 
 //Assign User

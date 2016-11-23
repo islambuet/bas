@@ -15,8 +15,6 @@ $config['system_status_pending']='Pending';
 $config['system_status_checked']='Checked';
 $config['system_status_approved']='Approved';
 
-$config['system_petty_tour']='TOUR';
-$config['system_petty_conveyance']='CONVEYANCE';
-$config['system_petty_purchase']='PURCHASE';
-
+$config['system_petty_iou_tour']='IOU_TOUR';
+$config['system_petty_iou_cash']='IOU_CASH';
 
