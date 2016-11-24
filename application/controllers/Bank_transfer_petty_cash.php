@@ -170,7 +170,7 @@ class Bank_transfer_petty_cash extends Root_Controller
     }
     private function system_details($id)
     {
-        if(isset($this->permissions['action2'])&&($this->permissions['action2']==1))
+        if(isset($this->permissions['action0'])&&($this->permissions['action0']==1))
         {
             if(($this->input->post('id')))
             {
