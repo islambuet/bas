@@ -31,6 +31,10 @@ class Bank_cash_in extends Root_Controller
         {
             $this->system_edit($id);
         }
+        elseif($action=="details")
+        {
+            $this->system_details($id);
+        }
         elseif($action=="save")
         {
             $this->system_save();
@@ -104,7 +108,8 @@ class Bank_cash_in extends Root_Controller
                 'transaction_number' => '',
                 'bank_id' => '',
                 'bank_branch' => '',
-                'remarks' => ''
+                'remarks' => '',
+                'picture_url' => ''
             );
             $data['accounts']=Query_helper::get_info($this->config->item('ems_basic_setup_arm_bank_accounts'),array('id value','account_no text'),array('status ="'.$this->config->item('system_status_active').'"'));
             $data['cash_in_types']=Query_helper::get_info($this->config->item('table_setup_basic_cashin_types'),array('id value','name text'),array('status ="'.$this->config->item('system_status_active').'"'));
@@ -167,6 +172,42 @@ class Bank_cash_in extends Root_Controller
             $this->jsonReturn($ajax);
         }
     }
+    private function system_details($id)
+    {
+        if(isset($this->permissions['action0'])&&($this->permissions['action0']==1))
+        {
+            if(($this->input->post('id')))
+            {
+                $crop_id=$this->input->post('id');
+            }
+            else
+            {
+                $crop_id=$id;
+            }
+
+            $data['item']=Query_helper::get_info($this->config->item('table_bank_transaction'),'*',array('id ='.$crop_id),1);
+            $data['accounts']=Query_helper::get_info($this->config->item('ems_basic_setup_arm_bank_accounts'),array('id value','account_no text'),array('status ="'.$this->config->item('system_status_active').'"'));
+            $data['cash_in_types']=Query_helper::get_info($this->config->item('table_setup_basic_cashin_types'),array('id value','name text'),array('status ="'.$this->config->item('system_status_active').'"'));
+            $data['payment_ways']=Query_helper::get_info($this->config->item('ems_basic_setup_payment_ways'),array('id value','name text'),array('status ="'.$this->config->item('system_status_active').'"'));
+            $data['banks']=Query_helper::get_info($this->config->item('ems_basic_setup_bank'),array('id value','name text'),array('status ="'.$this->config->item('system_status_active').'"'));
+            $data['users']=System_helper::get_users_info(array($data['item']['user_created']));
+            $data['title']='Edit Cash In';
+            $ajax['status']=true;
+            $ajax['system_content'][]=array("id"=>"#system_content","html"=>$this->load->view($this->controller_url."/details",$data,true));
+            if($this->message)
+            {
+                $ajax['system_message']=$this->message;
+            }
+            $ajax['system_page_url']=site_url($this->controller_url.'/index/details/'.$crop_id);
+            $this->jsonReturn($ajax);
+        }
+        else
+        {
+            $ajax['status']=false;
+            $ajax['system_message']=$this->lang->line("YOU_DONT_HAVE_ACCESS");
+            $this->jsonReturn($ajax);
+        }
+    }
 
 
     private function system_save()
@@ -203,6 +244,31 @@ class Bank_cash_in extends Root_Controller
         else
         {
             $data=$this->input->post('item');
+            $file_folder='images/bank_transaction/';
+            $dir=(FCPATH).$file_folder;
+            if(!is_dir($dir))
+            {
+                mkdir($dir, 0777);
+            }
+            $uploaded_files = System_helper::upload_file($file_folder);
+            if(array_key_exists('picture',$uploaded_files))
+            {
+                if($uploaded_files['picture']['status'])
+                {
+                    $data['picture_url']=base_url().$file_folder.'/'.$uploaded_files['picture']['info']['file_name'];
+                    $data['picture_file_full']=$file_folder.'/'.$uploaded_files['picture']['info']['file_name'];
+                    $data['picture_file_name']=$uploaded_files['picture']['info']['file_name'];
+                }
+                else
+                {
+
+                    $ajax['status']=false;
+                    $ajax['system_message']=$uploaded_files['picture']['message'];
+                    $this->jsonReturn($ajax);
+                    die();
+                }
+            }
+
             $data['date_transaction']=System_helper::get_time($data['date_transaction']);
             $data['in_out']=1;
             $data['reason']=$this->config->item('system_transaction_cash_in');

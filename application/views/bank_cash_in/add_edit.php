@@ -20,7 +20,7 @@
 
         <div class="row show-grid">
             <div class="col-xs-4">
-                <label class="control-label pull-right"><?php echo $this->lang->line('LABEL_DATE');?><span style="color:#FF0000">*</span></label>
+                <label class="control-label pull-right"><?php echo $CI->lang->line('LABEL_DATE');?><span style="color:#FF0000">*</span></label>
             </div>
             <div class="col-sm-4 col-xs-8">
                 <input type="text" name="item[date_transaction]" id="date_transaction" class="form-control datepicker" value="<?php echo System_helper::display_date($item['date_transaction']);?>"/>
@@ -32,7 +32,7 @@
             </div>
             <div class="col-sm-4 col-xs-8">
                 <select id="account_id" name="item[account_id]" class="form-control">
-                    <option value=""><?php echo $this->lang->line('SELECT');?></option>
+                    <option value=""><?php echo $CI->lang->line('SELECT');?></option>
                     <?php
                     foreach($accounts as $crop)
                     {?>
@@ -49,7 +49,7 @@
             </div>
             <div class="col-sm-4 col-xs-8">
                 <select id="account_id" name="item[cash_in_type_id]" class="form-control">
-                    <option value=""><?php echo $this->lang->line('SELECT');?></option>
+                    <option value=""><?php echo $CI->lang->line('SELECT');?></option>
                     <?php
                     foreach($cash_in_types as $crop)
                     {?>
@@ -66,7 +66,7 @@
             </div>
             <div class="col-sm-4 col-xs-8">
                 <select id="payment_way_id" name="item[payment_way_id]" class="form-control">
-                    <option value=""><?php echo $this->lang->line('SELECT');?></option>
+                    <option value=""><?php echo $CI->lang->line('SELECT');?></option>
                     <?php
                     foreach($payment_ways as $crop)
                     {?>
@@ -99,7 +99,7 @@
             </div>
             <div class="col-sm-4 col-xs-8">
                 <select id="payment_way_id" name="item[bank_id]" class="form-control">
-                    <option value=""><?php echo $this->lang->line('SELECT');?></option>
+                    <option value=""><?php echo $CI->lang->line('SELECT');?></option>
                     <?php
                     foreach($banks as $crop)
                     {?>
@@ -112,7 +112,7 @@
         </div>
         <div class="row show-grid">
             <div class="col-xs-4">
-                <label class="control-label pull-right"><?php echo $this->lang->line('LABEL_BANK_BRANCH_NAME');?></label>
+                <label class="control-label pull-right"><?php echo $CI->lang->line('LABEL_BANK_BRANCH_NAME');?></label>
             </div>
             <div class="col-sm-4 col-xs-8">
                 <input type="text" name="item[bank_branch]" id="bank_branch" class="form-control" value="<?php echo $item['bank_branch'];?>"/>
@@ -126,6 +126,24 @@
                 <textarea name="item[remarks]" id="remarks" class="form-control"><?php echo $item['remarks'];?></textarea>
             </div>
         </div>
+        <div class="row show-grid">
+            <div class="col-xs-4">
+                <label class="control-label pull-right"><?php echo $CI->lang->line('LABEL_PICTURE');?></label>
+            </div>
+            <div class="col-xs-4" id="container_picture">
+                <?php
+                $image=base_url().'images/no_image.jpg';
+                if(strlen($item['picture_url'])>0)
+                {
+                    $image=$item['picture_url'];
+                }
+                ?>
+                <img style="max-width: 250px;" src="<?php echo $image;?>">
+            </div>
+            <div class="col-xs-4">
+                <input type="file" class="browse_button" data-preview-container="#container_picture" name="picture">
+            </div>
+        </div>
     </div>
 
     <div class="clearfix"></div>
@@ -136,6 +154,7 @@
     {
         turn_off_triggers();
         $(".datepicker").datepicker({dateFormat : display_date_format});
+        $(".browse_button").filestyle({input: false,icon: false,buttonText: "Upload",buttonName: "btn-primary"});
 
     });
 </script>

@@ -9,6 +9,10 @@
     {
         $action_data["action_edit"]=base_url($CI->controller_url."/index/edit");
     }
+    if(isset($CI->permissions['action0'])&&($CI->permissions['action0']==1))
+    {
+        $action_data["action_details"]=base_url($CI->controller_url."/index/details");
+    }
     if(isset($CI->permissions['action4'])&&($CI->permissions['action4']==1))
     {
         $action_data["action_print"]='print';

@@ -108,7 +108,9 @@ $lang['LABEL_APPROVE'] = 'Approve';
 $lang['LABEL_CHECKING'] = 'Checking';
 $lang['LABEL_CREATED_BY'] = 'Created By';
 $lang['LABEL_CREATED_DATE'] = 'Created Date';
+$lang['LABEL_CREATED_TIME'] = 'Created Time';
 $lang['LABEL_ADVANCE_FOR'] = 'Advance For';
+$lang['LABEL_PICTURE'] = 'Picture';
 
 
 //Assign User
