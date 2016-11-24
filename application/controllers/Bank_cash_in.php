@@ -191,7 +191,7 @@ class Bank_cash_in extends Root_Controller
             $data['payment_ways']=Query_helper::get_info($this->config->item('ems_basic_setup_payment_ways'),array('id value','name text'),array('status ="'.$this->config->item('system_status_active').'"'));
             $data['banks']=Query_helper::get_info($this->config->item('ems_basic_setup_bank'),array('id value','name text'),array('status ="'.$this->config->item('system_status_active').'"'));
             $data['users']=System_helper::get_users_info(array($data['item']['user_created']));
-            $data['title']='Edit Cash In';
+            $data['title']='Details of Cash In';
             $ajax['status']=true;
             $ajax['system_content'][]=array("id"=>"#system_content","html"=>$this->load->view($this->controller_url."/details",$data,true));
             if($this->message)

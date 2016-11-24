@@ -84,6 +84,24 @@
                 <textarea name="item[remarks]" id="remarks" class="form-control"><?php echo $item['remarks'];?></textarea>
             </div>
         </div>
+        <div class="row show-grid">
+            <div class="col-xs-4">
+                <label class="control-label pull-right"><?php echo $CI->lang->line('LABEL_PICTURE');?></label>
+            </div>
+            <div class="col-xs-4" id="container_picture">
+                <?php
+                $image=base_url().'images/no_image.jpg';
+                if(strlen($item['picture_url'])>0)
+                {
+                    $image=$item['picture_url'];
+                }
+                ?>
+                <img style="max-width: 250px;" src="<?php echo $image;?>">
+            </div>
+            <div class="col-xs-4">
+                <input type="file" class="browse_button" data-preview-container="#container_picture" name="picture">
+            </div>
+        </div>
     </div>
 
     <div class="clearfix"></div>
@@ -94,6 +112,6 @@
     {
         turn_off_triggers();
         $(".datepicker").datepicker({dateFormat : display_date_format});
-
+        $(".browse_button").filestyle({input: false,icon: false,buttonText: "Upload",buttonName: "btn-primary"});
     });
 </script>
