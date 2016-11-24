@@ -80,6 +80,8 @@ $lang['MSG_SAVED_FAIL'] = 'Failed to Save!';
 $lang['MSG_INVALID_INPUT'] = 'Invalid data entry';
 
 $lang['LABEL_DATE']='Date';
+$lang['LABEL_DATE_START']='Starting Date';
+$lang['LABEL_DATE_END']='End Date';
 $lang['MSG_FILE_SIZE_ERROR']='File Size Error';
 $lang['MSG_FILE_TYPE_ERROR']='File Type Error';
 
@@ -128,4 +130,5 @@ $lang['LABEL_EMPLOYEE_NAME'] = 'Employee Name';
 $lang['LABEL_NUM_DAYS'] = 'Number of Days';
 $lang['LABEL_HOTEL_BILL'] = 'Hotel';
 $lang['LABEL_TRANSPORT_BILL'] = 'Transport';
-$lang['LABEL_OTHER_BILL'] = 'Other';
+$lang['LABEL_LOCAL_TRANSPORT_BILL'] = 'Local Conveyance';
+$lang['LABEL_OTHER_BILL'] = 'MISC';

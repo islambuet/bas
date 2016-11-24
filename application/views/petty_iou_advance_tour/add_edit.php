@@ -19,6 +19,14 @@
         </div>
         <div style="" class="row show-grid">
             <div class="col-xs-4">
+                <label class="control-label pull-right"><?php echo $CI->lang->line('LABEL_TITLE');?><span style="color:#FF0000">*</span></label>
+            </div>
+            <div class="col-sm-4 col-xs-8">
+                <input type="text" name="item[title]" id="title" class="form-control" style="text-align: left;" value="<?php echo $item['title'] ?>" >
+            </div>
+        </div>
+        <div style="" class="row show-grid">
+            <div class="col-xs-4">
                 <label class="control-label pull-right"><?php echo $CI->lang->line('LABEL_COMPANY_NAME');?><span style="color:#FF0000">*</span></label>
             </div>
             <div class="col-sm-4 col-xs-8">
@@ -51,12 +59,20 @@
                 </select>
             </div>
         </div>
+        <div class="row show-grid">
+            <div class="col-xs-4">
+                <label class="control-label pull-right"><?php echo $this->lang->line('LABEL_DATE_START');?><span style="color:#FF0000">*</span></label>
+            </div>
+            <div class="col-sm-4 col-xs-8">
+                <input type="text" name="item[date_start]" id="date_start" class="form-control datepicker" value="<?php echo System_helper::display_date($item['date_start']);?>"/>
+            </div>
+        </div>
         <div style="<?php if(!($item['id']>0)){echo 'display:none';} ?>" class="row show-grid" id="num_days_container">
             <div class="col-xs-4">
                 <label class="control-label pull-right"><?php echo $CI->lang->line('LABEL_NUM_DAYS');?><span style="color:#FF0000">*</span></label>
             </div>
             <div class="col-sm-4 col-xs-8">
-                <select id="num_days" name="item[num_days]" class="form-control">
+                <select id="num_days" name="num_days" class="form-control">
                     <option value=""><?php echo $this->lang->line('SELECT');?></option>
                     <?php
                     for($i=1;$i<=31;$i++)
@@ -94,9 +110,11 @@
         var total=parseFloat($('#daily_total').html());
         var hotel=parseFloat($('#hotel').val()) || 0;
         var transport=parseFloat($('#transport').val()) || 0;
+        var local_transport=parseFloat($('#local_transport').val()) || 0;
         var other=parseFloat($('#other').val()) || 0;
         total+=hotel;
         total+=transport;
+        total+=local_transport;
         total+=other;
         $('#total').html(number_format(total,2));
     }
@@ -108,6 +126,7 @@
         $(document).off("change", "#hotel");
         $(document).off("change", "#transport");
         $(document).off("change", "#other");
+        $(".datepicker").datepicker({dateFormat : display_date_format});
         $(document).on("change","#company_id",function()
         {
             $("#employee_id").val("");
@@ -176,6 +195,10 @@
             calculate_total();
         });
         $(document).on("change","#transport",function()
+        {
+            calculate_total();
+        });
+        $(document).on("change","#local_transport",function()
         {
             calculate_total();
         });

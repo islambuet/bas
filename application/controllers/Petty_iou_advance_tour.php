@@ -84,7 +84,7 @@ class Petty_iou_advance_tour extends Root_Controller
         {
             $this->db->where('user_created',$user->user_id);
         }
-        $this->db->where('expense_type',$this->config->item('system_petty_tour'));
+        $this->db->where('expense_type',$this->config->item('system_petty_iou_tour'));
         $this->db->order_by('id DESC');
         $items=$this->db->get()->result_array();
         foreach($items as &$item)
@@ -94,6 +94,8 @@ class Petty_iou_advance_tour extends Root_Controller
             $item['advance_for']=$employees[$item['employee_id']]['name'];
             $item['created_by']=$employees[$item['user_created']]['name'];
             $item['created_date']=System_helper::display_date($item['date_created']);
+            $item['num_days']=round(($item['date_end']-$item['date_start'])/(24*3600));
+            $item['date_start']=System_helper::display_date($item['date_start']);
         }
         $this->jsonReturn($items);
     }
@@ -106,6 +108,8 @@ class Petty_iou_advance_tour extends Root_Controller
             $data['title']="Create New Tour Advance";
             $data["item"] = Array(
                 'id' => 0,
+                'title'=>'',
+                'date_start'=>time(),
                 'num_days' => '',
                 'company_id' => '',
                 'employee_id' => '',
@@ -144,13 +148,14 @@ class Petty_iou_advance_tour extends Root_Controller
             }
 
             $data['item']=Query_helper::get_info($this->config->item('table_petty_cash_expense'),'*',array('id ='.$item_id),1);
-            if($data['item']['status_checkin_advance']!=$this->config->item('system_status_pending'))
+            if($data['item']['status_approval_advance']!=$this->config->item('system_status_pending'))
             {
                 $ajax['status']=false;
                 $ajax['system_message']="You Cannot Edit now.";
                 $this->jsonReturn($ajax);
                 die();
             }
+            $data['item']['num_days']=round(($data['item']['date_end']-$data['item']['date_start'])/(24*3600));
             $data['companies']=System_helper::get_companies();
 
             $db_login=$this->load->database('armalik_login',TRUE);
@@ -167,7 +172,7 @@ class Petty_iou_advance_tour extends Root_Controller
             $data['details']['daily_total']=0;
 
 
-            $results=Query_helper::get_info($this->config->item('table_petty_cash_expense_details'),'*',array('petty_id ='.$item_id,'status ="'.$this->config->item('system_status_active').'"'));
+            $results=Query_helper::get_info($this->config->item('table_petty_cash_iou_tour_details'),'*',array('petty_id ='.$item_id,'status ="'.$this->config->item('system_status_active').'"'));
             $details_item=array();
 
             foreach($results as $result)
@@ -201,6 +206,11 @@ class Petty_iou_advance_tour extends Root_Controller
             if(isset($details_item['FIXED']['TRANSPORT']))
             {
                 $data['details']['FIXED']['TRANSPORT']=$details_item['FIXED']['TRANSPORT'];
+            }
+            $data['details']['FIXED']['LOCAL_TRANSPORT']='';
+            if(isset($details_item['FIXED']['LOCAL_TRANSPORT']))
+            {
+                $data['details']['FIXED']['LOCAL_TRANSPORT']=$details_item['FIXED']['LOCAL_TRANSPORT'];
             }
             $data['details']['FIXED']['OTHER']='';
             if(isset($details_item['FIXED']['OTHER']))
@@ -257,6 +267,7 @@ class Petty_iou_advance_tour extends Root_Controller
         }
         $data['FIXED']['HOTEL']='';
         $data['FIXED']['TRANSPORT']='';
+        $data['FIXED']['LOCAL_TRANSPORT']='';
         $data['FIXED']['OTHER']='';
         $data['total']=$data['daily_total'];
         $ajax['status']=true;
@@ -303,8 +314,16 @@ class Petty_iou_advance_tour extends Root_Controller
         else
         {
             $data=$this->input->post('item');
-            $num_days=$data['num_days'];
-            $data['expense_type']=$this->config->item('system_petty_tour');
+            $num_days=$this->input->post('num_days');
+            $data['date_start']=System_helper::get_time($data['date_start']);
+            $data['date_end']=$data['date_start']+24*3600*$num_days;
+            $data['expense_type']=$this->config->item('system_petty_iou_tour');
+            $data['amount_actual']=0;
+            $data['amount_return']=0;
+            $data['status_checking_advance']=$this->config->item('system_status_pending');
+            $data['date_checking_advance']=null;
+            $data['user_checking_advance']=null;
+            $data['remarks_checking_advance']=null;
             $employee_info=System_helper::get_users_info(array($data['employee_id']));
             if(!$employee_info)
             {
@@ -337,8 +356,7 @@ class Petty_iou_advance_tour extends Root_Controller
 
             }
             $data['amount_advance']=$daily_total+$fixed_total;
-            $data['amount_actual']=0;
-            $data['amount_return']=0;
+
             $this->db->trans_start();  //DB Transaction Handle START
             $petty_id=$id;
             if($id>0)
@@ -355,7 +373,7 @@ class Petty_iou_advance_tour extends Root_Controller
                 $data['date_created'] = $time;
                 $petty_id=Query_helper::add($this->config->item('table_petty_cash_expense'),$data);
             }
-            $results=Query_helper::get_info($this->config->item('table_petty_cash_expense_details'),'*',array('petty_id ='.$petty_id));
+            $results=Query_helper::get_info($this->config->item('table_petty_cash_iou_tour_details'),'*',array('petty_id ='.$petty_id));
             $details_item=array();
             foreach($results as $result)
             {
@@ -370,12 +388,11 @@ class Petty_iou_advance_tour extends Root_Controller
             }
             $this->db->where('petty_id',$petty_id);
             $this->db->set('status',$this->config->item('system_status_delete'));
-            $this->db->update($this->config->item('table_petty_cash_expense_details'));
+            $this->db->update($this->config->item('table_petty_cash_iou_tour_details'));
             foreach($daily_allowance as $row)
             {
                 $data_daily=array();
                 $data_daily['petty_id']=$petty_id;
-                $data_daily['expense_type']=$this->config->item('system_petty_tour');
                 $data_daily['purpose_name']='';
                 $data_daily['purpose_id']=$row['allowance_id'];
                 $data_daily['amount_advance']=$row['amount']*$num_days;
@@ -386,20 +403,19 @@ class Petty_iou_advance_tour extends Root_Controller
                 {
                     $data_daily['user_updated'] = $user->user_id;
                     $data_daily['date_updated'] = $time;
-                    Query_helper::update($this->config->item('table_petty_cash_expense_details'),$data_daily,array("id = ".$details_item['DAILY'][$row['allowance_id']]));
+                    Query_helper::update($this->config->item('table_petty_cash_iou_tour_details'),$data_daily,array("id = ".$details_item['DAILY'][$row['allowance_id']]));
                 }
                 else
                 {
                     $data_daily['user_created'] = $user->user_id;
                     $data_daily['date_created'] = $time;
-                    Query_helper::add($this->config->item('table_petty_cash_expense_details'),$data_daily);
+                    Query_helper::add($this->config->item('table_petty_cash_iou_tour_details'),$data_daily);
                 }
             }
             foreach($tour['FIXED'] as $purpose_name=>$amount)
             {
                 $data_fixed=array();
                 $data_fixed['petty_id']=$petty_id;
-                $data_fixed['expense_type']=$this->config->item('system_petty_tour');
                 $data_fixed['purpose_name']=$purpose_name;
                 $data_fixed['purpose_id']=0;
                 if($amount>0)
@@ -417,13 +433,13 @@ class Petty_iou_advance_tour extends Root_Controller
                 {
                     $data_fixed['user_updated'] = $user->user_id;
                     $data_fixed['date_updated'] = $time;
-                    Query_helper::update($this->config->item('table_petty_cash_expense_details'),$data_fixed,array("id = ".$details_item['FIXED'][$purpose_name]));
+                    Query_helper::update($this->config->item('table_petty_cash_iou_tour_details'),$data_fixed,array("id = ".$details_item['FIXED'][$purpose_name]));
                 }
                 else
                 {
                     $data_fixed['user_created'] = $user->user_id;
                     $data_fixed['date_created'] = $time;
-                    Query_helper::add($this->config->item('table_petty_cash_expense_details'),$data_fixed);
+                    Query_helper::add($this->config->item('table_petty_cash_iou_tour_details'),$data_fixed);
                 }
 
 
@@ -453,6 +469,18 @@ class Petty_iou_advance_tour extends Root_Controller
     }
     private function check_validation()
     {
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('item[company_id]',$this->lang->line('LABEL_COMPANY_NAME'),'required');
+        $this->form_validation->set_rules('item[employee_id]',$this->lang->line('LABEL_EMPLOYEE_NAME'),'required');
+        $this->form_validation->set_rules('item[title]',$this->lang->line('LABEL_TITLE'),'required');
+        $this->form_validation->set_rules('item[date_start]',$this->lang->line('LABEL_DATE_START'),'required');
+        $this->form_validation->set_rules('num_days',$this->lang->line('LABEL_NUM_DAYS'),'required');
+
+        if($this->form_validation->run() == FALSE)
+        {
+            $this->message=validation_errors();
+            return false;
+        }
         $tour=$this->input->post('tour');
         if(!$tour)
         {
@@ -463,7 +491,7 @@ class Petty_iou_advance_tour extends Root_Controller
         if($item_id>0)
         {
             $info=Query_helper::get_info($this->config->item('table_petty_cash_expense'),'*',array('id ='.$item_id),1);
-            if($info['status_checkin_advance']!=$this->config->item('system_status_pending'))
+            if($info['status_approval_advance']!=$this->config->item('system_status_pending'))
             {
                 $this->message="You Cannot Edit now.";
                 return false;

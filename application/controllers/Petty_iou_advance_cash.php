@@ -263,6 +263,8 @@ class Petty_iou_advance_cash extends Root_Controller
         else
         {
             $data=$this->input->post('item');
+            $data['date_start'] = $time;
+            $data['date_end'] = $time;
             $data['expense_type']=$this->config->item('system_petty_iou_cash');
             $data['amount_actual']=0;
             $data['amount_return']=0;
@@ -321,6 +323,16 @@ class Petty_iou_advance_cash extends Root_Controller
         {
             $this->message=validation_errors();
             return false;
+        }
+        $item_id = $this->input->post("id");
+        if($item_id>0)
+        {
+            $info=Query_helper::get_info($this->config->item('table_petty_cash_expense'),'*',array('id ='.$item_id),1);
+            if($info['status_approval_advance']!=$this->config->item('system_status_pending'))
+            {
+                $this->message="You Cannot Edit now.";
+                return false;
+            }
         }
         return true;
     }

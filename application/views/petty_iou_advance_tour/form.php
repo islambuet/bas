@@ -62,6 +62,14 @@
             </div>
             <div style="" class="row show-grid">
                 <div class="col-xs-4">
+                    <label class="control-label pull-right"><?php echo $CI->lang->line('LABEL_LOCAL_TRANSPORT_BILL');?></label>
+                </div>
+                <div class="col-sm-4 col-xs-8">
+                    <input type="text" name="tour[FIXED][LOCAL_TRANSPORT]" id="local_transport" class="form-control float_type_positive" style="text-align: left;" value="<?php echo $FIXED['LOCAL_TRANSPORT'] ?>" >
+                </div>
+            </div>
+            <div style="" class="row show-grid">
+                <div class="col-xs-4">
                     <label class="control-label pull-right"><?php echo $CI->lang->line('LABEL_OTHER_BILL');?></label>
                 </div>
                 <div class="col-sm-4 col-xs-8">
