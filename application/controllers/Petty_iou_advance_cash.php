@@ -197,20 +197,33 @@ class Petty_iou_advance_cash extends Root_Controller
 
             $data['item']=Query_helper::get_info($this->config->item('table_petty_cash_expense'),'*',array('id ='.$item_id),1);
 
-            $data['companies']=System_helper::get_companies();
+            $data['companies']=System_helper::get_companies(array($data['item']['company_id']));
 
-            /*$db_login=$this->load->database('armalik_login',TRUE);
-            $db_login->from($this->config->item('table_setup_users_company').' uc');
-            $db_login->select('ui.user_id value');
-            $db_login->select('ui.name text');
-            $db_login->join($this->config->item('table_setup_user_info').' ui','ui.user_id = uc.user_id','INNER');
-            $db_login->where('uc.company_id',$data['item']['company_id']);
-            $db_login->where('uc.revision',1);
+            $db_login=$this->load->database('armalik_login',TRUE);
+            $db_login->from($this->config->item('table_setup_user_info').' ui');
+            $db_login->select('ui.*');
+            $db_login->select('u.employee_id');
+            $db_login->select('dept.name department_name');
+            $db_login->select('desig.name designation_name');
+            $db_login->join($this->config->item('table_setup_user').' u','u.id = ui.user_id','INNER');
+            $db_login->join($this->config->item('table_setup_designation').' desig','desig.id = ui.designation','LEFT');
+            $db_login->join($this->config->item('table_setup_department').' dept','dept.id = ui.department_id','LEFT');
+            $db_login->where('ui.user_id',$data['item']['employee_id']);
             $db_login->where('ui.revision',1);
-            $data['employees']=$db_login->get()->result_array();
-            */
+            $data['employee']=$db_login->get()->row_array();
+            $user_ids=array();
+            $user_ids[]=$data['item']['user_created'];
+            if($data['item']['user_checking_advance']>0)
+            {
+                $user_ids[]=$data['item']['user_checking_advance'];
+            }
+            if($data['item']['user_approval_advance']>0)
+            {
+                $user_ids[]=$data['item']['user_approval_advance'];
+            }
+            $data['users']=System_helper::get_users_info($user_ids);
 
-            $data['title']='Details of Conveyance Advance ('.$item_id.')';
+            $data['title']='Details of Cash Requisition';
             $ajax['status']=true;
             $ajax['system_content'][]=array("id"=>"#system_content","html"=>$this->load->view($this->controller_url."/details",$data,true));
             if($this->message)
