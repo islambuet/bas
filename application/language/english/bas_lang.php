@@ -111,6 +111,9 @@ $lang['LABEL_CREATED_DATE'] = 'Created Date';
 $lang['LABEL_CREATED_TIME'] = 'Created Time';
 $lang['LABEL_ADVANCE_FOR'] = 'Advance For';
 $lang['LABEL_PICTURE'] = 'Picture';
+$lang['LABEL_CHECKED_BY'] = 'Checked By';
+$lang['LABEL_APPROVED_BY'] = 'Approved By';
+$lang['LABEL_RECEIVED_BY'] = 'Received By';
 
 
 //Assign User

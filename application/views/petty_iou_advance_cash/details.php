@@ -95,7 +95,7 @@
 
     <div class="clearfix"></div>
 </div>
-<div class="print_container">
+<div class="print_container visible-print">
     <div class="row show-grid">
         <div class="col-xs-12 text-center">
             <h3>CASH REQUISITION</h3>
@@ -105,9 +105,7 @@
                 <?php
                 if(sizeof($companies)>0)
                 {
-                    ?>
-                    <label class="control-label"><?php echo $companies[0]['full_name'];?></label>
-                <?php
+                    echo $companies[0]['full_name'];
                 }
                 ?>
             </label>
@@ -124,9 +122,7 @@
                 <?php
                 if(sizeof($employee)>0)
                 {
-                    ?>
-                    <?php echo $employee['name'];?>
-                <?php
+                    echo $employee['name'];
                 }
                 ?>
             </label>
@@ -136,9 +132,7 @@
                 <?php
                 if(sizeof($employee)>0)
                 {
-                    ?>
-                    <?php echo $employee['department_name'];?>
-                <?php
+                    echo $employee['department_name'];
                 }
                 ?>
             </label>
@@ -148,9 +142,7 @@
                     <?php
                     if(sizeof($employee)>0)
                     {
-                        ?>
-                        <?php echo $employee['designation_name'];?>
-                    <?php
+                        echo $employee['designation_name'];
                     }
                     ?>
             </label>
@@ -160,19 +152,64 @@
                     <?php
                     if(sizeof($employee)>0)
                     {
-                        ?>
-                        <?php echo $employee['employee_id'];?>
-                    <?php
+                        echo $employee['employee_id'];
                     }
                     ?>
             </label>
         </div>
     </div>
     <div class="row show-grid">
-
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <th class="text-center"><?php echo $CI->lang->line("LABEL_PURPOSE");?></th>
+                <th class="text-center" style="width: 150px;"><?php echo $CI->lang->line("LABEL_AMOUNT");?></th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><?php echo $item['title'];?></td>
+                    <td><?php echo number_format($item['amount_advance'],2);?></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <div class="row show-grid">
+        <div class="col-xs-4 text-center">
+            <div>
+                <label class="control-label"><?php
+                    if(sizeof($employee)>0)
+                    {
+                        echo $employee['name'];
+                    }
+                    ?></label>
+            </div>
+            <div><label class="control-label" style="border-top: 2px solid #000000;"><?php echo $CI->lang->line('LABEL_RECEIVED_BY');?></label></div>
 
+
+        </div>
+        <div class="col-xs-4 text-center">
+            <div>
+                <label class="control-label"><?php
+                    if(sizeof($employee)>0)
+                    {
+                        //echo $employee['name'];
+                    }
+                    ?></label>
+            </div>
+            <div><label class="control-label" style="border-top: 2px solid #000000;"><?php echo $CI->lang->line('LABEL_CHECKED_BY');?></label></div>
+        </div>
+        <div class="col-xs-4 text-center">
+            <div>
+                <label class="control-label"><?php
+                    if(sizeof($employee)>0)
+                    {
+                        echo $employee['name'];
+                    }
+                    ?></label>
+            </div>
+            <div><label class="control-label" style="border-top: 2px solid #000000;"><?php echo $CI->lang->line('LABEL_APPROVED_BY');?></label></div>
+        </div>
     </div>
 
 </div>
