@@ -3,8 +3,8 @@
 $lang['MSG_USERNAME_PASSWORD_INVALID'] = 'Username and Password did not match or Invalid';
 $lang['MSG_LOGIN_SUCCESS'] = 'Successfully Logged In';
 $lang['MSG_LOGOUT_SUCCESS'] = 'Successfully Logged out';
-$lang['MSG_NOT_ASSIGNED_GROUP'] = 'Please Contact with Admin(01777709208) to assign some task.';
-$lang['MSG_SITE_OFFLINE'] = 'Site is Currently Offline.Please contact with admin(01777709208).';
+$lang['MSG_NOT_ASSIGNED_GROUP'] = 'Please Contact with Admin(09666775544.Ext.901) to assign some task.';
+$lang['MSG_SITE_OFFLINE'] = 'Site is Currently Offline.Please contact with admin(09666775544.Ext.901).';
 
 //Action buttons
 $lang['ACTION_DASHBOARD'] = 'Dashboard';
