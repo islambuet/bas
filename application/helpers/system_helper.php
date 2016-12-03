@@ -127,5 +127,25 @@ class System_helper
         $results=$db_login->get()->result_array();
         return $results;
     }
+    public static function get_employee_info($user_ids=array())
+    {
+        $CI =& get_instance();
+        $db_login=$CI->load->database('armalik_login',TRUE);
+        $db_login->from($CI->config->item('table_setup_user_info').' ui');
+        $db_login->select('ui.user_id value');
+        $db_login->select('CONCAT(u.employee_id,"-",ui.name) text',false);
+        $db_login->join($CI->config->item('table_setup_user').' u','u.id = ui.user_id','INNER');
+        if(sizeof($user_ids)>0)
+        {
+            $db_login->where_in('user_id',$user_ids);
+        }
+        $db_login->where('revision',1);
+        $db_login->where('user_type_id',$CI->config->item('system_user_type_employee_id'));
+        $db_login->order_by('u.employee_id');
+        $results=$db_login->get()->result_array();
+
+        return $results;
+
+    }
 
 }
