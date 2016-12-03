@@ -55,6 +55,7 @@ $lang['LABEL_PRICE_UNIT'] = 'Unit Price';
 $lang['LABEL_STOCK_MIN'] = 'Minimum Stock';
 $lang['LABEL_STOCK_MAX'] = 'Maximum Stock';
 $lang['LABEL_STOCK_CURRENT'] = 'Current Stock';
+$lang['LABEL_QUANTITY_PERSON'] = 'Quantity/person';
 
 //Customer
 $lang['LABEL_CUSTOMER_ID'] = 'Customer Id';
