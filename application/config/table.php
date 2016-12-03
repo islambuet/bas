@@ -29,7 +29,9 @@ $config['table_setup_expense_category'] = 'bas_setup_expense_category';
 $config['table_setup_expense_type'] = 'bas_setup_expense_type';
 $config['table_setup_expense_expense'] = 'bas_setup_expense_expense';
 $config['table_setup_expense_bank'] = 'bas_setup_expense_bank';
+//basic setup
 $config['table_setup_basic_cashin_types'] = 'bas_setup_basic_cashin_types';
+$config['table_setup_basic_monthly_purchase_category'] = 'bas_setup_basic_monthly_purchase_category';
 //bank transaction
 $config['table_bank_transaction'] = 'bas_bank_transaction';
 $config['table_bank_transfer_history'] = 'bas_bank_bank_transfer';
