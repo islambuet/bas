@@ -51,13 +51,6 @@ $lang['LABEL_CLASSIFICATION_NAME'] = 'Classification Name';
 $lang['LABEL_TYPE_NAME'] = 'Type Name';
 $lang['LABEL_SKIN_TYPE_NAME'] = 'Skin Type Name';
 $lang['LABEL_VARIETY_NAME'] = 'Variety Name';
-$lang['LABEL_PRICE_UNIT'] = 'Unit Price';
-$lang['LABEL_STOCK_MIN'] = 'Minimum Stock';
-$lang['LABEL_STOCK_MAX'] = 'Maximum Stock';
-$lang['LABEL_STOCK_CURRENT'] = 'Current Stock';
-$lang['LABEL_QUANTITY_PERSON'] = 'Quantity/person';
-$lang['LABEL_CHECKING_LIMIT'] = 'Checking Limit';
-$lang['LABEL_APPROVE_LIMIT'] = 'Approval Limit';
 
 //Customer
 $lang['LABEL_CUSTOMER_ID'] = 'Customer Id';
@@ -145,3 +138,16 @@ $lang['LABEL_HOTEL_BILL'] = 'Hotel';
 $lang['LABEL_TRANSPORT_BILL'] = 'Transport';
 $lang['LABEL_LOCAL_TRANSPORT_BILL'] = 'Local Conveyance';
 $lang['LABEL_OTHER_BILL'] = 'MISC';
+
+$lang['LABEL_PRICE_UNIT'] = 'Unit Price';
+$lang['LABEL_STOCK_MIN'] = 'Minimum Stock';
+$lang['LABEL_STOCK_MAX'] = 'Maximum Stock';
+$lang['LABEL_STOCK_CURRENT'] = 'Current Stock';
+$lang['LABEL_QUANTITY_PERSON'] = 'Quantity/person';
+$lang['LABEL_CHECKING_LIMIT'] = 'Checking Limit';
+$lang['LABEL_APPROVE_LIMIT'] = 'Approval Limit';
+$lang['LABEL_LIMIT_MIN'] = 'Minimum Limit';
+$lang['LABEL_LIMIT_MAX'] = 'Maximum Limit';
+$lang['LABEL_SELECT_COLOR'] = 'Select Color';
+$lang['LABEL_COLOR_CODE'] = 'Color Code';
+$lang['LABEL_COLOR'] = 'Color';

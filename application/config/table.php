@@ -38,6 +38,7 @@ $config['table_setup_basic_daily_food_item'] = 'bas_setup_basic_daily_food_item'
 $config['table_setup_approve_checking_limit'] = 'bas_setup_approve_checking_limit';
 $config['table_setup_approve_checking_panel'] = 'bas_setup_approve_checking_panel';
 $config['table_setup_approve_approve_panel'] = 'bas_setup_approve_approve_panel';
+$config['table_setup_approve_color'] = 'bas_setup_approve_color';
 //bank transaction
 $config['table_bank_transaction'] = 'bas_bank_transaction';
 $config['table_bank_transfer_history'] = 'bas_bank_bank_transfer';
