@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Setup_approve_checking_panel extends Root_Controller
+class Setup_approve_approval_panel extends Root_Controller
 {
     private  $message;
     public $permissions;
@@ -9,8 +9,8 @@ class Setup_approve_checking_panel extends Root_Controller
     {
         parent::__construct();
         $this->message="";
-        $this->permissions=User_helper::get_permission('Setup_approve_checking_panel');
-        $this->controller_url='setup_approve_checking_panel';
+        $this->permissions=User_helper::get_permission('Setup_approve_approval_panel');
+        $this->controller_url='setup_approve_approval_panel';
         //$this->load->model("setup_users_other_sites_model");
 
     }
@@ -47,7 +47,7 @@ class Setup_approve_checking_panel extends Root_Controller
     {
         if(isset($this->permissions['action0'])&&($this->permissions['action0']==1))
         {
-            $data['title']="IOU Checking Panel Setup";
+            $data['title']="IOU Approval Panel Setup";
             $ajax['status']=true;
             $ajax['system_content'][]=array("id"=>"#system_content","html"=>$this->load->view($this->controller_url."/list",$data,true));
             if($this->message)
@@ -68,11 +68,11 @@ class Setup_approve_checking_panel extends Root_Controller
     private function get_items()
     {
         $user = User_helper::get_user();
-        $results=Query_helper::get_info($this->config->item('table_setup_approve_checking_limit'),array('user_id','limit_checking'),array('status ="'.$this->config->item('system_status_active').'"'));
+        $results=Query_helper::get_info($this->config->item('table_setup_approve_checking_limit'),array('user_id','limit_approve'),array('status ="'.$this->config->item('system_status_active').'"'));
         $user_limits=array();
         foreach($results as $result)
         {
-            $user_limits[$result['user_id']]=$result['limit_checking'];
+            $user_limits[$result['user_id']]=$result['limit_approve'];
         }
         $db_login=$this->load->database('armalik_login',TRUE);
 
@@ -101,11 +101,11 @@ class Setup_approve_checking_panel extends Root_Controller
         {
             if(isset($user_limits[$item['id']])&&($user_limits[$item['id']]>0))
             {
-                $item['limit_checking']=$user_limits[$item['id']];
+                $item['limit_approve']=$user_limits[$item['id']];
             }
             else
             {
-                $item['limit_checking']='';
+                $item['limit_approve']='';
             }
 
         }
@@ -125,14 +125,14 @@ class Setup_approve_checking_panel extends Root_Controller
                 $user_id=$id;
             }
             $data['id']=$user_id;
-            $result=Query_helper::get_info($this->config->item('table_setup_approve_checking_limit'),array('limit_checking'),array('user_id ='.$user_id,'status ="'.$this->config->item('system_status_active').'"'),1);
+            $result=Query_helper::get_info($this->config->item('table_setup_approve_checking_limit'),array('limit_approve'),array('user_id ='.$user_id,'status ="'.$this->config->item('system_status_active').'"'),1);
             if($result)
             {
-                $data['limit_checking']=$result['limit_checking'];
+                $data['limit_approve']=$result['limit_approve'];
             }
             else
             {
-                $data['limit_checking']='';
+                $data['limit_approve']='';
             }
             $db_login=$this->load->database('armalik_login',TRUE);
 
@@ -143,10 +143,10 @@ class Setup_approve_checking_panel extends Root_Controller
 
             $user_info=$db_login->get()->row_array();
 
-            $data['title']='Edit Checking Limit ('.$user_info['name'].')';
+            $data['title']='Edit Approval Limit ('.$user_info['name'].')';
             $data['employees']=System_helper::get_employee_info();
             $data['assigned_employees']=array();
-            $results=Query_helper::get_info($this->config->item('table_setup_approve_checking_panel'),array('employee_id'),array('user_id ='.$user_id,'status ="'.$this->config->item('system_status_active').'"'));
+            $results=Query_helper::get_info($this->config->item('table_setup_approve_approve_panel'),array('employee_id'),array('user_id ='.$user_id,'status ="'.$this->config->item('system_status_active').'"'));
             foreach($results as $result)
             {
                 $data['assigned_employees'][]=$result['employee_id'];
@@ -181,14 +181,14 @@ class Setup_approve_checking_panel extends Root_Controller
                 $user_id=$id;
             }
             $data['id']=$user_id;
-            $result=Query_helper::get_info($this->config->item('table_setup_approve_checking_limit'),array('limit_checking'),array('user_id ='.$user_id,'status ="'.$this->config->item('system_status_active').'"'),1);
+            $result=Query_helper::get_info($this->config->item('table_setup_approve_checking_limit'),array('limit_approve'),array('user_id ='.$user_id,'status ="'.$this->config->item('system_status_active').'"'),1);
             if($result)
             {
-                $data['limit_checking']=$result['limit_checking'];
+                $data['limit_approve']=$result['limit_approve'];
             }
             else
             {
-                $data['limit_checking']='';
+                $data['limit_approve']='';
             }
             $db_login=$this->load->database('armalik_login',TRUE);
 
@@ -199,10 +199,10 @@ class Setup_approve_checking_panel extends Root_Controller
 
             $user_info=$db_login->get()->row_array();
 
-            $data['title']='Details of Checking Limit ('.$user_info['name'].')';
+            $data['title']='Details of Approval Limit ('.$user_info['name'].')';
             $data['employees']=System_helper::get_employee_info();
             $data['assigned_employees']=array();
-            $results=Query_helper::get_info($this->config->item('table_setup_approve_checking_panel'),array('employee_id'),array('user_id ='.$user_id,'status ="'.$this->config->item('system_status_active').'"'));
+            $results=Query_helper::get_info($this->config->item('table_setup_approve_approve_panel'),array('employee_id'),array('user_id ='.$user_id,'status ="'.$this->config->item('system_status_active').'"'));
             foreach($results as $result)
             {
                 $data['assigned_employees'][]=$result['employee_id'];
@@ -249,7 +249,7 @@ class Setup_approve_checking_panel extends Root_Controller
             $limit_checking=Query_helper::get_info($this->config->item('table_setup_approve_checking_limit'),array('id'),array('user_id ='.$id,'status ="'.$this->config->item('system_status_active').'"'),1);
             $data=array();
             $data['user_id']=$id;
-            $data['limit_checking']=$this->input->post('limit_checking');
+            $data['limit_approve']=$this->input->post('limit_approve');
             $data['status']=$this->config->item('system_status_active');
             if($limit_checking)
             {
@@ -264,14 +264,14 @@ class Setup_approve_checking_panel extends Root_Controller
                 Query_helper::add($this->config->item('table_setup_approve_checking_limit'),$data);
             }
             $assigned_employees=array();
-            $results=Query_helper::get_info($this->config->item('table_setup_approve_checking_panel'),array('id,employee_id'),array('user_id ='.$id));
+            $results=Query_helper::get_info($this->config->item('table_setup_approve_approve_panel'),array('id,employee_id'),array('user_id ='.$id));
             foreach($results as $result)
             {
                 $assigned_employees[$result['employee_id']]=$result['id'];
             }
             $this->db->where('user_id',$id);
             $this->db->set('status',$this->config->item('system_status_delete'));
-            $this->db->update($this->config->item('table_setup_approve_checking_panel'));
+            $this->db->update($this->config->item('table_setup_approve_approve_panel'));
 
             $employees=$this->input->post('employees');
             if(is_array($employees))
@@ -286,13 +286,13 @@ class Setup_approve_checking_panel extends Root_Controller
                     {
                         $data['user_updated'] = $user->user_id;
                         $data['date_updated'] = $time;
-                        Query_helper::update($this->config->item('table_setup_approve_checking_panel'),$data,array("id = ".$assigned_employees[$employee_id]));
+                        Query_helper::update($this->config->item('table_setup_approve_approve_panel'),$data,array("id = ".$assigned_employees[$employee_id]));
                     }
                     else
                     {
                         $data['user_created'] = $user->user_id;
                         $data['date_created'] = $time;
-                        Query_helper::add($this->config->item('table_setup_approve_checking_panel'),$data);
+                        Query_helper::add($this->config->item('table_setup_approve_approve_panel'),$data);
                     }
 
                 }
@@ -314,7 +314,7 @@ class Setup_approve_checking_panel extends Root_Controller
     private function check_validation()
     {
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('limit_checking',$this->lang->line('LABEL_CHECKING_LIMIT'),'required');
+        $this->form_validation->set_rules('limit_approve',$this->lang->line('LABEL_APPROVE_LIMIT'),'required');
         if($this->form_validation->run() == FALSE)
         {
             $this->message=validation_errors();

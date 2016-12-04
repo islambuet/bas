@@ -37,7 +37,7 @@
                 <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="user_name"><?php echo $CI->lang->line('LABEL_USERNAME'); ?></label>
                 <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="name"><?php echo $CI->lang->line('LABEL_NAME'); ?></label>
                 <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="designation_name"><?php echo $CI->lang->line('LABEL_DESIGNATION_NAME'); ?></label>
-                <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="limit_checking"><?php echo $CI->lang->line('LABEL_CHECKING_LIMIT'); ?></label>
+                <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="limit_approve"><?php echo $CI->lang->line('LABEL_APPROVE_LIMIT'); ?></label>
                 <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="ordering"><?php echo $CI->lang->line('LABEL_ORDER'); ?></label>
                 <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="status"><?php echo $CI->lang->line('STATUS'); ?></label>
 
@@ -67,7 +67,7 @@
                 { name: 'user_name', type: 'string' },
                 { name: 'name', type: 'string' },
                 { name: 'designation_name', type: 'string' },
-                { name: 'limit_checking', type: 'string' },
+                { name: 'limit_approve', type: 'string' },
                 { name: 'ordering', type: 'int' },
                 { name: 'status', type: 'string' }
             ],
@@ -96,7 +96,7 @@
                     { text: '<?php echo $CI->lang->line('LABEL_USERNAME'); ?>', dataField: 'user_name',width:'150'},
                     { text: '<?php echo $CI->lang->line('LABEL_NAME'); ?>', dataField: 'name',width:'300'},
                     { text: '<?php echo $CI->lang->line('LABEL_DESIGNATION_NAME'); ?>', dataField: 'designation_name',width:'200'},
-                    { text: '<?php echo $CI->lang->line('LABEL_CHECKING_LIMIT'); ?>', dataField: 'limit_checking',cellsalign: 'right'},
+                    { text: '<?php echo $CI->lang->line('LABEL_APPROVE_LIMIT'); ?>', dataField: 'limit_approve',cellsalign: 'right'},
                     { text: '<?php echo $CI->lang->line('LABEL_ORDER'); ?>', dataField: 'ordering',width:'150',cellsalign: 'right'},
                     { text: '<?php echo $CI->lang->line('STATUS'); ?>', dataField: 'status',filtertype: 'list',width:'150',cellsalign: 'right'}
                 ]
