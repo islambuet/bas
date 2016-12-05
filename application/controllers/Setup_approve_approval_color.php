@@ -10,7 +10,7 @@ class Setup_approve_approval_color extends Root_Controller
         parent::__construct();
         $this->message="";
         $this->permissions=User_helper::get_permission('Setup_approve_approval_color');
-        $this->controller_url='Setup_approve_approval_color';
+        $this->controller_url='setup_approve_approval_color';
 
     }
 
