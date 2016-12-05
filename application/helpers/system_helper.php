@@ -127,7 +127,7 @@ class System_helper
         $results=$db_login->get()->result_array();
         return $results;
     }
-    public static function get_employee_info($user_ids=array())
+    public static function get_employee_info($user_ids=array(),$status='')
     {
         $CI =& get_instance();
         $db_login=$CI->load->database('armalik_login',TRUE);
@@ -139,9 +139,15 @@ class System_helper
         {
             $db_login->where_in('user_id',$user_ids);
         }
+        if(strlen($status)>0)
+        {
+            $db_login->where('u.status',$status);
+        }
         $db_login->where('revision',1);
         $db_login->where('user_type_id',$CI->config->item('system_user_type_employee_id'));
-        $db_login->order_by('u.employee_id');
+
+        $db_login->order_by('u.status');
+        $db_login->order_by('ui.ordering');
         $results=$db_login->get()->result_array();
 
         return $results;
