@@ -107,25 +107,29 @@
 <script type="text/javascript">
     function calculate_total()
     {
-        var total=parseFloat($('#daily_total').html());
-        var hotel=parseFloat($('#hotel').val()) || 0;
-        var transport=parseFloat($('#transport').val()) || 0;
-        var local_transport=parseFloat($('#local_transport').val()) || 0;
-        var other=parseFloat($('#other').val()) || 0;
-        total+=hotel;
-        total+=transport;
-        total+=local_transport;
-        total+=other;
-        $('#total').html(number_format(total,2));
+        var daily_total=0;
+        var fixed_total=0;
+        $('.daily').each(function()
+        {
+            var value=parseFloat($(this).val()) || 0;
+            daily_total+=value;
+        });
+        $('.fixed').each(function()
+        {
+            var value=parseFloat($(this).val()) || 0;
+            fixed_total+=value;
+        });
+        $('#daily_total').html(number_format(daily_total,2));
+        $('#fixed_total').html(number_format(fixed_total,2));
+        $('#total').html(number_format(daily_total+fixed_total,2));
     }
     jQuery(document).ready(function()
     {
         $(document).off("change", "#company_id");
         $(document).off("change", "#employee_id");
         $(document).off("change", "#num_days");
-        $(document).off("change", "#hotel");
-        $(document).off("change", "#transport");
-        $(document).off("change", "#other");
+        $(document).off("change", ".fixed");
+        $(document).off("change", ".daily");
         $(".datepicker").datepicker({dateFormat : display_date_format});
         $(document).on("change","#company_id",function()
         {
@@ -190,22 +194,15 @@
                 });
             }
         });
-        $(document).on("change","#hotel",function()
+        $(document).on("change",".fixed",function()
         {
             calculate_total();
         });
-        $(document).on("change","#transport",function()
+        $(document).on("change",".daily",function()
         {
             calculate_total();
         });
-        $(document).on("change","#local_transport",function()
-        {
-            calculate_total();
-        });
-        $(document).on("change","#other",function()
-        {
-            calculate_total();
-        });
+
 
     });
 </script>

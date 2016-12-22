@@ -11,7 +11,6 @@ class Petty_iou_advance_tour extends Root_Controller
         $this->message="";
         $this->permissions=User_helper::get_permission('Petty_iou_advance_tour');
         $this->controller_url='petty_iou_advance_tour';
-        //$this->load->model("sys_module_task_model");
     }
 
     public function index($action="list",$id=0)
@@ -168,56 +167,27 @@ class Petty_iou_advance_tour extends Root_Controller
             $db_login->where('ui.revision',1);
             $data['employees']=$db_login->get()->result_array();
 
-            $data['details']['tour_allowance_items']=Query_helper::get_info($this->config->item('table_setup_tour_daily_item'),array('id value','name text'),array('status ="'.$this->config->item('system_status_active').'"'),0,0,array('ordering'));
-            $data['details']['daily_total']=0;
+            $data['details']['daily_items']=Query_helper::get_info($this->config->item('table_setup_tour_daily_item'),array('id value','name text'),array('status ="'.$this->config->item('system_status_active').'"'),0,0,array('ordering'));
+            $data['details']['fixed_items']=Query_helper::get_info($this->config->item('table_setup_tour_fixed_item'),array('id value','name text'),array('status ="'.$this->config->item('system_status_active').'"'),0,0,array('ordering'));
 
+
+            $data['details']['daily']=array();
+            $data['details']['fixed']=array();
 
             $results=Query_helper::get_info($this->config->item('table_petty_cash_iou_tour_details'),'*',array('petty_id ='.$item_id,'status ="'.$this->config->item('system_status_active').'"'));
-            $details_item=array();
+
 
             foreach($results as $result)
             {
-                if($result['purpose_id']>0)
+                if($result['purpose_type']=='DAILY')
                 {
-                    $details_item['DAILY'][$result['purpose_id']]=$result['amount_advance'];
+                    $data['details']['daily'][$result['purpose_id']]=$result['amount_advance'];
                 }
-                else
+                elseif($result['purpose_type']=='FIXED')
                 {
-                    $details_item['FIXED'][$result['purpose_name']]=$result['amount_advance'];
-                }
-            }
-            $data['details']['DAILY']=array();
-            $data['details']['daily_total']=0;
-            foreach($data['details']['tour_allowance_items'] as $row)
-            {
-                if(isset($details_item['DAILY'][$row['value']]))
-                {
-                    $data['details']['DAILY'][$row['value']]=$details_item['DAILY'][$row['value']];
-                    $data['details']['daily_total']+=$details_item['DAILY'][$row['value']];
+                    $data['details']['fixed'][$result['purpose_id']]=$result['amount_advance'];
                 }
             }
-
-            $data['details']['FIXED']['HOTEL']='';
-            if(isset($details_item['FIXED']['HOTEL']))
-            {
-                $data['details']['FIXED']['HOTEL']=$details_item['FIXED']['HOTEL'];
-            }
-            $data['details']['FIXED']['TRANSPORT']='';
-            if(isset($details_item['FIXED']['TRANSPORT']))
-            {
-                $data['details']['FIXED']['TRANSPORT']=$details_item['FIXED']['TRANSPORT'];
-            }
-            $data['details']['FIXED']['LOCAL_TRANSPORT']='';
-            if(isset($details_item['FIXED']['LOCAL_TRANSPORT']))
-            {
-                $data['details']['FIXED']['LOCAL_TRANSPORT']=$details_item['FIXED']['LOCAL_TRANSPORT'];
-            }
-            $data['details']['FIXED']['OTHER']='';
-            if(isset($details_item['FIXED']['OTHER']))
-            {
-                $data['details']['FIXED']['OTHER']=$details_item['FIXED']['OTHER'];
-            }
-            $data['details']['total']=number_format($data['item']['amount_advance'],2);
 
             $data['title']='Edit Tour Advance';
             $ajax['status']=true;
@@ -254,22 +224,17 @@ class Petty_iou_advance_tour extends Root_Controller
         }
         $num_days=$this->input->post('num_days');
 
-        $data['tour_allowance_items']=Query_helper::get_info($this->config->item('table_setup_tour_daily_item'),array('id value','name text'),array('status ="'.$this->config->item('system_status_active').'"'),0,0,array('ordering'));
+        $data['daily_items']=Query_helper::get_info($this->config->item('table_setup_tour_daily_item'),array('id value','name text'),array('status ="'.$this->config->item('system_status_active').'"'),0,0,array('ordering'));
+        $data['fixed_items']=Query_helper::get_info($this->config->item('table_setup_tour_fixed_item'),array('id value','name text'),array('status ="'.$this->config->item('system_status_active').'"'),0,0,array('ordering'));
         $daily_allowance=Query_helper::get_info($this->config->item('table_setup_tour_designation_allowance'),'*',array('revision =1','designation_id ='.$employee_info[$employee_id]['designation']));
 
-        $data['DAILY']=array();
-        $data['daily_total']=0;
-
+        $data['daily']=array();
         foreach($daily_allowance as $row)
         {
-            $data['DAILY'][$row['allowance_id']]=$row['amount']*$num_days;
-            $data['daily_total']+=$data['DAILY'][$row['allowance_id']];
+            $data['daily'][$row['allowance_id']]=$row['amount']*$num_days;
+
         }
-        $data['FIXED']['HOTEL']='';
-        $data['FIXED']['TRANSPORT']='';
-        $data['FIXED']['LOCAL_TRANSPORT']='';
-        $data['FIXED']['OTHER']='';
-        $data['total']=$data['daily_total'];
+        $data['fixed']=array();
         $ajax['status']=true;
         $ajax['system_content'][]=array("id"=>"#system_report_container","html"=>$this->load->view($this->controller_url."/form",$data,true));
         if($this->message)
@@ -318,45 +283,25 @@ class Petty_iou_advance_tour extends Root_Controller
             $data['date_start']=System_helper::get_time($data['date_start']);
             $data['date_end']=$data['date_start']+24*3600*$num_days;
             $data['expense_type']=$this->config->item('system_petty_iou_tour');
+            $data['amount_advance']=0;
             $data['amount_actual']=0;
             $data['amount_return']=0;
-            $data['status_checking_advance']=$this->config->item('system_status_pending');
-            $data['date_checking_advance']=null;
-            $data['user_checking_advance']=null;
-            $data['remarks_checking_advance']=null;
-            $employee_info=System_helper::get_users_info(array($data['employee_id']));
-            if(!$employee_info)
-            {
-                $ajax['status']=true;
-                $ajax['system_message']="Employee setup failed";
-                $this->jsonReturn($ajax);
-                die();
-            }
-            if(!($employee_info[$data['employee_id']]['designation']>0))
-            {
-                $ajax['status']=true;
-                $ajax['system_message']="Designation for this employee cannot determine";
-                $this->jsonReturn($ajax);
-                die();
-            }
-            $daily_allowance=Query_helper::get_info($this->config->item('table_setup_tour_designation_allowance'),'*',array('revision =1','designation_id ='.$employee_info[$data['employee_id']]['designation']));
-            $daily_total=0;
-            foreach($daily_allowance as $row)
-            {
-                $daily_total+=$row['amount']*$num_days;
-            }
-            $fixed_total=0;
-            $tour=$this->input->post('tour');
-            foreach($tour['FIXED'] as $row)
+            $daily_amounts=$this->input->post('daily');
+            $fixed_amounts=$this->input->post('fixed');
+            foreach($daily_amounts as $row)
             {
                 if($row>0)
                 {
-                    $fixed_total+=$row;
+                    $data['amount_advance']+=$row;
                 }
-
             }
-            $data['amount_advance']=$daily_total+$fixed_total;
-
+            foreach($fixed_amounts as $row)
+            {
+                if($row>0)
+                {
+                    $data['amount_advance']+=$row;
+                }
+            }
             $this->db->trans_start();  //DB Transaction Handle START
             $petty_id=$id;
             if($id>0)
@@ -377,33 +322,33 @@ class Petty_iou_advance_tour extends Root_Controller
             $details_item=array();
             foreach($results as $result)
             {
-                if($result['purpose_id']>0)
-                {
-                    $details_item['DAILY'][$result['purpose_id']]=$result['id'];
-                }
-                else
-                {
-                    $details_item['FIXED'][$result['purpose_name']]=$result['id'];
-                }
+                $details_item[$result['purpose_type']][$result['purpose_id']]=$result['id'];
             }
             $this->db->where('petty_id',$petty_id);
             $this->db->set('status',$this->config->item('system_status_delete'));
             $this->db->update($this->config->item('table_petty_cash_iou_tour_details'));
-            foreach($daily_allowance as $row)
+            foreach($daily_amounts as $key=>$row)
             {
                 $data_daily=array();
                 $data_daily['petty_id']=$petty_id;
-                $data_daily['purpose_name']='';
-                $data_daily['purpose_id']=$row['allowance_id'];
-                $data_daily['amount_advance']=$row['amount']*$num_days;
+                $data_daily['purpose_type']='DAILY';
+                $data_daily['purpose_id']=$key;
+                if($row>0)
+                {
+                    $data_daily['amount_advance']=$row;
+                }
+                else
+                {
+                    $data_daily['amount_advance']=0;
+                }
                 $data_daily['amount_actual']=0;
                 $data_daily['amount_return']=0;
                 $data_daily['status']=$this->config->item('system_status_active');
-                if(isset($details_item['DAILY'][$row['allowance_id']]))
+                if(isset($details_item['DAILY'][$key]))
                 {
                     $data_daily['user_updated'] = $user->user_id;
                     $data_daily['date_updated'] = $time;
-                    Query_helper::update($this->config->item('table_petty_cash_iou_tour_details'),$data_daily,array("id = ".$details_item['DAILY'][$row['allowance_id']]));
+                    Query_helper::update($this->config->item('table_petty_cash_iou_tour_details'),$data_daily,array("id = ".$details_item['DAILY'][$key]));
                 }
                 else
                 {
@@ -412,15 +357,15 @@ class Petty_iou_advance_tour extends Root_Controller
                     Query_helper::add($this->config->item('table_petty_cash_iou_tour_details'),$data_daily);
                 }
             }
-            foreach($tour['FIXED'] as $purpose_name=>$amount)
+            foreach($fixed_amounts as $key=>$row)
             {
                 $data_fixed=array();
                 $data_fixed['petty_id']=$petty_id;
-                $data_fixed['purpose_name']=$purpose_name;
-                $data_fixed['purpose_id']=0;
-                if($amount>0)
+                $data_fixed['purpose_type']='FIXED';
+                $data_fixed['purpose_id']=$key;
+                if($row>0)
                 {
-                    $data_fixed['amount_advance']=$amount;
+                    $data_fixed['amount_advance']=$row;
                 }
                 else
                 {
@@ -429,11 +374,11 @@ class Petty_iou_advance_tour extends Root_Controller
                 $data_fixed['amount_actual']=0;
                 $data_fixed['amount_return']=0;
                 $data_fixed['status']=$this->config->item('system_status_active');
-                if(isset($details_item['FIXED'][$purpose_name]))
+                if(isset($details_item['FIXED'][$key]))
                 {
                     $data_fixed['user_updated'] = $user->user_id;
                     $data_fixed['date_updated'] = $time;
-                    Query_helper::update($this->config->item('table_petty_cash_iou_tour_details'),$data_fixed,array("id = ".$details_item['FIXED'][$purpose_name]));
+                    Query_helper::update($this->config->item('table_petty_cash_iou_tour_details'),$data_fixed,array("id = ".$details_item['FIXED'][$key]));
                 }
                 else
                 {
@@ -481,8 +426,8 @@ class Petty_iou_advance_tour extends Root_Controller
             $this->message=validation_errors();
             return false;
         }
-        $tour=$this->input->post('tour');
-        if(!$tour)
+        $daily=$this->input->post('daily');
+        if(!$daily)
         {
             $this->message="Unfinished Input";
             return false;

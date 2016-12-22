@@ -12,7 +12,8 @@
         </div>
         <div id="collapse_daily" class="panel-collapse collapse in">
             <?php
-            foreach($tour_allowance_items as $row)
+            $daily_total=0;
+            foreach($daily_items as $row)
             {
                 ?>
                 <div style="" class="row show-grid">
@@ -20,7 +21,7 @@
                         <label class="control-label pull-right"><?php echo $row['text'];?></label>
                     </div>
                     <div class="col-sm-4 col-xs-8">
-                        <label class="control-label"><?php if(isset($DAILY[$row['value']])){echo $DAILY[$row['value']]; }else{echo '0';} ?></label>
+                        <input type="text" name="daily[<?php echo $row['value']; ?>]" class="daily form-control float_type_positive" style="text-align: left;" value="<?php if(isset($daily[$row['value']])){echo $daily[$row['value']];$daily_total+=$daily[$row['value']]; }else{echo '0';} ?>" >
                     </div>
                 </div>
                 <?php
@@ -31,7 +32,7 @@
                     <label class="control-label pull-right">Daily Total</label>
                 </div>
                 <div class="col-sm-4 col-xs-8">
-                    <label class="control-label" id="daily_total"><?php echo $daily_total; ?></label>
+                    <label class="control-label" id="daily_total"><?php echo number_format($daily_total,2); ?></label>
                 </div>
             </div>
 
@@ -44,36 +45,28 @@
             </h4>
         </div>
         <div id="collapse_fixed" class="panel-collapse collapse in">
+            <?php
+            $fixed_total=0;
+            foreach($fixed_items as $row)
+            {
+                ?>
+                <div style="" class="row show-grid">
+                    <div class="col-xs-4">
+                        <label class="control-label pull-right"><?php echo $row['text'];?></label>
+                    </div>
+                    <div class="col-sm-4 col-xs-8">
+                        <input type="text" name="fixed[<?php echo $row['value']; ?>]" class="fixed form-control float_type_positive" style="text-align: left;" value="<?php if(isset($fixed[$row['value']])){echo $fixed[$row['value']];$fixed_total+=$fixed[$row['value']]; }else{echo '0';} ?>" >
+                    </div>
+                </div>
+            <?php
+            }
+            ?>
             <div style="" class="row show-grid">
                 <div class="col-xs-4">
-                    <label class="control-label pull-right"><?php echo $CI->lang->line('LABEL_HOTEL_BILL');?></label>
+                    <label class="control-label pull-right">Variance Total</label>
                 </div>
                 <div class="col-sm-4 col-xs-8">
-                    <input type="text" name="tour[FIXED][HOTEL]" id="hotel" class="form-control float_type_positive" style="text-align: left;" value="<?php echo $FIXED['HOTEL'] ?>" >
-                </div>
-            </div>
-            <div style="" class="row show-grid">
-                <div class="col-xs-4">
-                    <label class="control-label pull-right"><?php echo $CI->lang->line('LABEL_TRANSPORT_BILL');?></label>
-                </div>
-                <div class="col-sm-4 col-xs-8">
-                    <input type="text" name="tour[FIXED][TRANSPORT]" id="transport" class="form-control float_type_positive" style="text-align: left;" value="<?php echo $FIXED['TRANSPORT'] ?>" >
-                </div>
-            </div>
-            <div style="" class="row show-grid">
-                <div class="col-xs-4">
-                    <label class="control-label pull-right"><?php echo $CI->lang->line('LABEL_LOCAL_TRANSPORT_BILL');?></label>
-                </div>
-                <div class="col-sm-4 col-xs-8">
-                    <input type="text" name="tour[FIXED][LOCAL_TRANSPORT]" id="local_transport" class="form-control float_type_positive" style="text-align: left;" value="<?php echo $FIXED['LOCAL_TRANSPORT'] ?>" >
-                </div>
-            </div>
-            <div style="" class="row show-grid">
-                <div class="col-xs-4">
-                    <label class="control-label pull-right"><?php echo $CI->lang->line('LABEL_OTHER_BILL');?></label>
-                </div>
-                <div class="col-sm-4 col-xs-8">
-                    <input type="text" name="tour[FIXED][OTHER]" id="other" class="form-control float_type_positive" style="text-align: left;" value="<?php echo $FIXED['OTHER'] ?>" >
+                    <label class="control-label" id="fixed_total"><?php echo number_format($fixed_total,2); ?></label>
                 </div>
             </div>
         </div>
@@ -83,7 +76,7 @@
             <label class="control-label pull-right">Total</label>
         </div>
         <div class="col-sm-4 col-xs-8">
-            <label class="control-label" id="total"><?php echo $total; ?></label>
+            <label class="control-label" id="total"><?php echo number_format($daily_total+$fixed_total,2); ?></label>
         </div>
     </div>
 </div>
