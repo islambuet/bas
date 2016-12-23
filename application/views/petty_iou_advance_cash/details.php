@@ -95,7 +95,7 @@
 
     <div class="clearfix"></div>
 </div>
-<div class="print_container visible-print">
+<div class="print_container">
     <div class="row show-grid">
         <div class="col-xs-12 text-center">
             <h3>CASH REQUISITION</h3>
@@ -175,7 +175,7 @@
         </table>
     </div>
     <div class="row show-grid">
-        <div class="col-xs-4 text-center">
+        <div class="col-xs-6 text-center">
             <div>
                 <label class="control-label"><?php
                     if(sizeof($employee)>0)
@@ -185,21 +185,8 @@
                     ?></label>
             </div>
             <div><label class="control-label" style="border-top: 2px solid #000000;"><?php echo $CI->lang->line('LABEL_RECEIVED_BY');?></label></div>
-
-
         </div>
-        <div class="col-xs-4 text-center">
-            <div>
-                <label class="control-label"><?php
-                    if(sizeof($employee)>0)
-                    {
-                        //echo $employee['name'];
-                    }
-                    ?></label>
-            </div>
-            <div><label class="control-label" style="border-top: 2px solid #000000;"><?php echo $CI->lang->line('LABEL_CHECKED_BY');?></label></div>
-        </div>
-        <div class="col-xs-4 text-center">
+        <div class="col-xs-6 text-center">
             <div>
                 <label class="control-label"><?php
                     if(sizeof($employee)>0)

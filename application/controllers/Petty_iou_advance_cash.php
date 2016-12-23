@@ -213,10 +213,6 @@ class Petty_iou_advance_cash extends Root_Controller
             $data['employee']=$db_login->get()->row_array();
             $user_ids=array();
             $user_ids[]=$data['item']['user_created'];
-            if($data['item']['user_checking_advance']>0)
-            {
-                $user_ids[]=$data['item']['user_checking_advance'];
-            }
             if($data['item']['user_approval_advance']>0)
             {
                 $user_ids[]=$data['item']['user_approval_advance'];
@@ -281,10 +277,6 @@ class Petty_iou_advance_cash extends Root_Controller
             $data['expense_type']=$this->config->item('system_petty_iou_cash');
             $data['amount_actual']=0;
             $data['amount_return']=0;
-            $data['status_checking_advance']=$this->config->item('system_status_pending');
-            $data['date_checking_advance']=null;
-            $data['user_checking_advance']=null;
-            $data['remarks_checking_advance']=null;
             $this->db->trans_start();  //DB Transaction Handle START
 
             if($id>0)
