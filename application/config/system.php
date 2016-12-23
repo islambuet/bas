@@ -17,6 +17,8 @@ $config['system_status_approved']='Approved';
 
 $config['system_petty_iou_tour']='IOU_TOUR';
 $config['system_petty_iou_cash']='IOU_CASH';
+$config['system_petty_iou_daily_food']='IOU_DAILY_FOOD';
+$config['system_petty_iou_monthly_purchase']='IOU_MONTHLY_PURCHASE';
 
 $config['system_user_type_employee_id']=1;
 

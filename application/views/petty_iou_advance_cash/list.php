@@ -45,7 +45,6 @@
                 <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="advance_for"><?php echo $CI->lang->line('LABEL_ADVANCE_FOR'); ?></label>
                 <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="created_by"><?php echo $CI->lang->line('LABEL_CREATED_BY'); ?></label>
                 <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="created_date"><?php echo $CI->lang->line('LABEL_CREATED_DATE'); ?></label>
-                <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="status_checking_advance"><?php echo $CI->lang->line('LABEL_CHECKING'); ?></label>
                 <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="status_approval_advance"><?php echo $CI->lang->line('LABEL_APPROVE'); ?></label>
                 <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="status_payment_advance"><?php echo $CI->lang->line('LABEL_PAYMENT'); ?></label>
                 <label class="checkbox-inline"><input type="checkbox" class="system_jqx_column"  checked value="remarks_advance"><?php echo $CI->lang->line('LABEL_REMARKS'); ?></label>
@@ -77,7 +76,6 @@
                 { name: 'advance_for', type: 'string' },
                 { name: 'created_by', type: 'string' },
                 { name: 'created_date', type: 'string' },
-                { name: 'status_checking_advance', type: 'string' },
                 { name: 'status_approval_advance', type: 'string' },
                 { name: 'status_payment_advance', type: 'string' },
                 { name: 'remarks_advance', type: 'string' }
@@ -112,7 +110,6 @@
                     { text: '<?php echo $CI->lang->line('LABEL_ADVANCE_FOR'); ?>', dataField: 'advance_for',width:'200'},
                     { text: '<?php echo $CI->lang->line('LABEL_CREATED_BY'); ?>', dataField: 'created_by',width:'200'},
                     { text: '<?php echo $CI->lang->line('LABEL_CREATED_DATE'); ?>', dataField: 'created_date',width:'100'},
-                    { text: '<?php echo $CI->lang->line('LABEL_CHECKING'); ?>', dataField: 'status_checking_advance',filtertype: 'list',width:'80',cellsalign: 'right'},
                     { text: '<?php echo $CI->lang->line('LABEL_APPROVE'); ?>', dataField: 'status_approval_advance',filtertype: 'list',width:'80',cellsalign: 'right'},
                     { text: '<?php echo $CI->lang->line('LABEL_PAYMENT'); ?>', dataField: 'status_payment_advance',filtertype: 'list',width:'80',cellsalign: 'right'},
                     { text: '<?php echo $CI->lang->line('LABEL_REMARKS'); ?>', dataField: 'remarks_advance'}

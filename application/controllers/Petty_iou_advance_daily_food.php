@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Petty_iou_advance_purchase extends Root_Controller
+class Petty_iou_advance_daily_food extends Root_Controller
 {
     private  $message;
     public $permissions;
@@ -9,9 +9,8 @@ class Petty_iou_advance_purchase extends Root_Controller
     {
         parent::__construct();
         $this->message="";
-        $this->permissions=User_helper::get_permission('Petty_iou_advance_purchase');
-        $this->controller_url='petty_iou_advance_purchase';
-        //$this->load->model("sys_module_task_model");
+        $this->permissions=User_helper::get_permission('Petty_iou_advance_daily_food');
+        $this->controller_url='petty_iou_advance_daily_food';
     }
 
     public function index($action="list",$id=0)
@@ -46,7 +45,7 @@ class Petty_iou_advance_purchase extends Root_Controller
     {
         if(isset($this->permissions['action0'])&&($this->permissions['action0']==1))
         {
-            $data['title']="IOU Purchase Advance";
+            $data['title']="Daily Food Purchase Advance";
             $ajax['status']=true;
             $ajax['system_content'][]=array("id"=>"#system_content","html"=>$this->load->view($this->controller_url."/list",$data,true));
             if($this->message)
@@ -80,7 +79,7 @@ class Petty_iou_advance_purchase extends Root_Controller
         {
             $this->db->where('user_created',$user->user_id);
         }
-        $this->db->where('expense_type',$this->config->item('system_petty_purchase'));
+        $this->db->where('expense_type',$this->config->item('system_petty_iou_daily_food'));
         $this->db->order_by('id DESC');
         $items=$this->db->get()->result_array();
         foreach($items as &$item)
@@ -90,6 +89,7 @@ class Petty_iou_advance_purchase extends Root_Controller
             $item['advance_for']=$employees[$item['employee_id']]['name'];
             $item['created_by']=$employees[$item['user_created']]['name'];
             $item['created_date']=System_helper::display_date($item['date_created']);
+            $item['date_start']=System_helper::display_date($item['date_start']);
         }
         $this->jsonReturn($items);
     }

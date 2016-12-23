@@ -109,6 +109,7 @@ $lang['LABEL_CREATED_BY'] = 'Created By';
 $lang['LABEL_CREATED_DATE'] = 'Created Date';
 $lang['LABEL_CREATED_TIME'] = 'Created Time';
 $lang['LABEL_ADVANCE_FOR'] = 'Advance For';
+$lang['LABEL_ADVANCE_BY'] = 'Advance By';
 $lang['LABEL_PICTURE'] = 'Picture';
 $lang['LABEL_CHECKED_BY'] = 'Checked By';
 $lang['LABEL_APPROVED_BY'] = 'Approved By';
