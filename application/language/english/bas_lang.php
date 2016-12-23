@@ -135,6 +135,7 @@ $lang['LABEL_COMPANY_NAME'] = 'Company';
 $lang['LABEL_EMPLOYEE_NAME'] = 'Employee Name';
 $lang['LABEL_EMPLOYEE_ID'] = 'Employee ID';
 $lang['LABEL_NUM_DAYS'] = 'Number of Days';
+$lang['LABEL_NUM_PERSON'] = 'Number of People';
 $lang['LABEL_HOTEL_BILL'] = 'Hotel';
 $lang['LABEL_TRANSPORT_BILL'] = 'Transport';
 $lang['LABEL_LOCAL_TRANSPORT_BILL'] = 'Local Conveyance';

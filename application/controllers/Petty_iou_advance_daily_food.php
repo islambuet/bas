@@ -31,6 +31,10 @@ class Petty_iou_advance_daily_food extends Root_Controller
         {
             $this->system_edit($id);
         }
+        elseif($action=="get_form")
+        {
+            $this->system_get_form();
+        }
         elseif($action=="save")
         {
             $this->system_save();
@@ -102,13 +106,16 @@ class Petty_iou_advance_daily_food extends Root_Controller
             $data['title']="Create New Purchase Advance";
             $data["item"] = Array(
                 'id' => 0,
+                'title'=>'',
+                'date_start'=>time(),
+                'date_end' => '',
                 'company_id' => '',
                 'employee_id' => '',
-                'amount_advance' => '',
                 'remarks_advance' => ''
             );
             $data['companies']=System_helper::get_companies();
             $data['employees']=array();
+
             $ajax['system_page_url']=site_url($this->controller_url."/index/add");
 
             $ajax['status']=true;
@@ -176,7 +183,30 @@ class Petty_iou_advance_daily_food extends Root_Controller
             $this->jsonReturn($ajax);
         }
     }
+    private function system_get_form()
+    {
 
+        $num_person=$this->input->post('num_person');
+
+        $data['daily_food_items']=Query_helper::get_info($this->config->item('table_setup_basic_daily_food_item'),'*',array('status ="'.$this->config->item('system_status_active').'"'),0,0,array('ordering'));
+        /*$data['fixed_items']=Query_helper::get_info($this->config->item('table_setup_tour_fixed_item'),array('id value','name text'),array('status ="'.$this->config->item('system_status_active').'"'),0,0,array('ordering'));
+        $daily_allowance=Query_helper::get_info($this->config->item('table_setup_tour_designation_allowance'),'*',array('revision =1','designation_id ='.$employee_info[$employee_id]['designation']));
+
+        $data['daily_costs']=array();
+        foreach($daily_allowance as $row)
+        {
+            $data['daily'][$row['allowance_id']]=$row['amount']*$num_days;
+
+        }
+        $data['fixed']=array();*/
+        $ajax['status']=true;
+        $ajax['system_content'][]=array("id"=>"#system_report_container","html"=>$this->load->view($this->controller_url."/form",$data,true));
+        if($this->message)
+        {
+            $ajax['system_message']=$this->message;
+        }
+        $this->jsonReturn($ajax);
+    }
     private function system_save()
     {
         $id = $this->input->post("id");
