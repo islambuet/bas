@@ -24,7 +24,7 @@ class External_login extends CI_Controller {
 	}
     public function login($auth_code)
     {
-        $this->db->from($this->config->item('system_db_login').'.'.$this->config->item('login_other_sites_visit'));
+        $this->db->from($this->config->item('system_db_login').'.'.$this->config->item('table_login_other_sites_visit'));
         $this->db->where('auth_key',$auth_code);
         $this->db->where('status',$this->config->item('system_status_active'));
         $info=$this->db->get()->row_array();
@@ -32,7 +32,7 @@ class External_login extends CI_Controller {
         {
             $this->db->where('id',$info['id']);
             $this->db->set('status',$this->config->item('system_status_inactive'));
-            $this->db->update($this->config->item('system_db_login').'.'.$this->config->item('login_other_sites_visit'));
+            $this->db->update($this->config->item('system_db_login').'.'.$this->config->item('table_login_other_sites_visit'));
             $this->session->set_userdata('user_id',$info['user_id']);
         }
         redirect(site_url());
