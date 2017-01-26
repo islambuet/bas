@@ -479,18 +479,3 @@ function animate_message(message)
     $("#system_message").html(message);
     $('#system_message').slideToggle("slow").delay(3000).slideToggle("slow");
 }
-
-function turn_off_triggers()
-{
-    $(document).off("click", "#button_action_save_jqx");
-    $(document).off("click", ".task_action_all");
-    $(document).off("click", ".task_header_all");
-
-
-    //expense
-    $(document).off("change", "#category_id");
-    $(document).off("change", "#type_id");
-    $(document).off("change", "#expense_id");
-    
-
-}

@@ -1,51 +1,49 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Sys_user_group extends Root_Controller
 {
-    private  $message;
+    private $message;
     public $permissions;
     public $controller_url;
     public function __construct()
     {
         parent::__construct();
-        $this->message="";
         $this->permissions=User_helper::get_permission('Sys_user_group');
         $this->controller_url='sys_user_group';
     }
-
-    public function index($action="list",$id=0)
+    public function index($action='list',$id=0)
     {
-        if($action=="list")
+        if($action=='list')
         {
-            $this->system_list($id);
+            $this->system_list();
         }
         elseif($action=='get_items')
         {
             $this->system_get_items();
         }
-        elseif($action=="add")
+        elseif($action=='add')
         {
             $this->system_add();
         }
-        elseif($action=="edit")
+        elseif($action=='edit')
         {
             $this->system_edit($id);
         }
-        elseif($action=="save")
+        elseif($action=='save')
         {
             $this->system_save();
         }
         else
         {
-            $this->system_list($id);
+            $this->system_list();
         }
     }
-
     private function system_list()
     {
-        if(isset($this->permissions['action0'])&&($this->permissions['action0']==1))
+        if(isset($this->permissions['action0']) && ($this->permissions['action0']==1))
         {
-            $data['title']="User Groups";
+            $data['title']='User Groups';
             $ajax['status']=true;
             $ajax['system_content'][]=array('id'=>'#system_content','html'=>$this->load->view($this->controller_url.'/list',$data,true));
             if($this->message)
@@ -58,26 +56,23 @@ class Sys_user_group extends Root_Controller
         else
         {
             $ajax['status']=false;
-            $ajax['system_message']=$this->lang->line("YOU_DONT_HAVE_ACCESS");
+            $ajax['system_message']=$this->lang->line('YOU_DONT_HAVE_ACCESS');
             $this->json_return($ajax);
         }
-
     }
     private function system_get_items()
     {
-        $user = User_helper::get_user();
+        $user=User_helper::get_user();
         if($user->user_group==1)
         {
-            $items=Query_helper::get_info($this->config->item('table_system_user_group'),array('id','name','status','ordering'),array('status !="'.$this->config->item('system_status_delete').'"'));
+            $items=Query_helper::get_info($this->config->item('table_system_user_group'),array('id','name','status','ordering'),array('status!="'.$this->config->item('system_status_delete').'"'),0,0,array('ordering ASC'));
         }
         else
         {
-            $items=Query_helper::get_info($this->config->item('table_system_user_group'),array('id','name','status','ordering'),array('id !=1','status !="'.$this->config->item('system_status_delete').'"'));
+            $items=Query_helper::get_info($this->config->item('table_system_user_group'),array('id','name','status','ordering'),array('id!=1','status!="'.$this->config->item('system_status_delete').'"'),0,0,array('ordering ASC'));
         }
         $this->json_return($items);
-
     }
-
     private function system_add()
     {
         if(isset($this->permissions['action1']) && ($this->permissions['action1']==1))
@@ -198,7 +193,7 @@ class Sys_user_group extends Root_Controller
             else
             {
                 $ajax['status']=false;
-                $ajax['system_message']=$this->lang->line('MSG_SAVED_FAIL');
+                $ajax['desk_message']=$this->lang->line('MSG_SAVED_FAIL');
                 $this->json_return($ajax);
             }
         }
@@ -214,6 +209,5 @@ class Sys_user_group extends Root_Controller
         }
         return true;
     }
-
 
 }

@@ -11,7 +11,7 @@ class Common_controller extends Root_Controller
     }
 
     //location setup
-    public function get_dropdown_expenseTypes_by_categoryId()
+    /*public function get_dropdown_expenseTypes_by_categoryId()
     {
         $html_container_id='#type_id';
         if($this->input->post('html_container_id'))
@@ -52,6 +52,6 @@ class Common_controller extends Root_Controller
         $ajax['system_content'][]=array("id"=>$html_container_id,"html"=>$this->load->view("dropdown_with_select",$data,true));
 
         $this->jsonReturn($ajax);
-    }
+    }*/
 
 }
