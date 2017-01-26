@@ -6,12 +6,12 @@ class User_helper
     function __construct($id)
     {
         $CI = & get_instance();
-        $db_login=$CI->load->database('armalik_login',TRUE);
-        $db_login->from($CI->config->item('table_setup_user_info').' user_info');
-        $db_login->where('user_id',$id);
-        $db_login->where('revision',1);
 
-        $user=$db_login->get()->row();
+        $CI->db->from($CI->config->item('system_db_login').'.'.$CI->config->item('table_login_setup_user_info').' user_info');
+        $CI->db->where('user_info.user_id',$id);
+        $CI->db->where('user_info.revision',1);
+
+        $user=$CI->db->get()->row();
         if ($user)
         {
             foreach ($user as $key => $value)
@@ -30,19 +30,19 @@ class User_helper
     {
         //also need to check if it has access to ems
         $CI = & get_instance();
-        $db_login=$CI->load->database('armalik_login',TRUE);
-        $db_login->from($CI->config->item('table_setup_user').' user');
-        $db_login->select('user.id');
-        $db_login->join($CI->config->item('table_setup_users_other_sites').' uos','uos.user_id =user.id','INNER');
-        $db_login->join($CI->config->item('table_system_other_sites').' os','uos.site_id =os.id','INNER');
-        $db_login->where('uos.revision',1);
-        $db_login->where('os.short_name',$CI->config->item('system_site_short_name'));
 
-        $db_login->where('user.user_name',$username);
-        $db_login->where('user.password',md5($password));
-        $db_login->where('user.status',$CI->config->item('system_status_active'));
+        $CI->db->from($CI->config->item('system_db_login').'.'.$CI->config->item('table_login_setup_user').' user');
+        $CI->db->select('user.id');
+        $CI->db->join($CI->config->item('system_db_login').'.'.$CI->config->item('table_login_setup_users_other_sites').' uos','uos.user_id=user.id','inner');
+        $CI->db->join($CI->config->item('system_db_login').'.'.$CI->config->item('table_login_system_other_sites').' os','uos.site_id=os.id','inner');
+        $CI->db->where('uos.revision',1);
+        $CI->db->where('os.short_name',$CI->config->item('system_site_short_name'));
 
-        $user=$db_login->get()->row();
+        $CI->db->where('user.user_name',$username);
+        $CI->db->where('user.password',md5($password));
+        $CI->db->where('user.status',$CI->config->item('system_status_active'));
+
+        $user=$CI->db->get()->row();
 
         if ($user)
         {
@@ -60,24 +60,25 @@ class User_helper
     public static function get_user()
     {
         $CI = & get_instance();
-        if (User_helper::$logged_user) {
+        if (User_helper::$logged_user)
+        {
             return User_helper::$logged_user;
         }
         else
         {
             if($CI->session->userdata("user_id")!="")
             {
-                $db_login=$CI->load->database('armalik_login',TRUE);
-                $db_login->from($CI->config->item('table_setup_user').' user');
-                $db_login->select('user.id');
-                $db_login->join($CI->config->item('table_setup_users_other_sites').' uos','uos.user_id =user.id','INNER');
-                $db_login->join($CI->config->item('table_system_other_sites').' os','uos.site_id =os.id','INNER');
-                $db_login->where('uos.revision',1);
-                $db_login->where('os.short_name',$CI->config->item('system_site_short_name'));
+                $CI->db->from($CI->config->item('system_db_login').'.'.$CI->config->item('table_login_setup_user').' user');
+                $CI->db->select('user.id');
 
-                $db_login->where('user.id',$CI->session->userdata('user_id'));
-                $db_login->where('user.status',$CI->config->item('system_status_active'));
-                $user=$db_login->get()->row();
+                $CI->db->join($CI->config->item('system_db_login').'.'.$CI->config->item('table_login_setup_users_other_sites').' uos','uos.user_id=user.id','inner');
+                $CI->db->join($CI->config->item('system_db_login').'.'.$CI->config->item('table_login_system_other_sites').' os','uos.site_id=os.id','inner');
+                $CI->db->where('uos.revision',1);
+                $CI->db->where('os.short_name',$CI->config->item('system_site_short_name'));
+
+                $CI->db->where('user.id',$CI->session->userdata('user_id'));
+                $CI->db->where('user.status',$CI->config->item('system_status_active'));
+                $user=$CI->db->get()->row();
 
                 if($user)
                 {
@@ -176,7 +177,7 @@ class User_helper
         {
             if($menu_data['items'][$parent]['type']=='TASK')
             {
-                return '<li><a href="'.site_url($menu_data['items'][$parent]['controller']).'">'.$menu_data['items'][$parent]['name'].'</a></li>';
+                return '<li><a href="'.site_url(strtolower($menu_data['items'][$parent]['controller'])).'">'.$menu_data['items'][$parent]['name'].'</a></li>';
             }
             else
             {

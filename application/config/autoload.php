@@ -83,7 +83,7 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array('url','user','query','system');
+$autoload['helper'] = array('url','user','query','system','task');
 
 /*
 | -------------------------------------------------------------------
@@ -97,7 +97,7 @@ $autoload['helper'] = array('url','user','query','system');
 | config files.  Otherwise, leave it blank.
 |
 */
-$autoload['config'] = array('ems','table','user_group','system');
+$autoload['config'] = array('table_login','table_ems','table_system','table_bas','user_group','system');
 
 /*
 | -------------------------------------------------------------------
